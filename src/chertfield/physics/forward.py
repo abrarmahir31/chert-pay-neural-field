@@ -19,6 +19,7 @@ End-point constants are textbook values and are configuration, not learned (unle
 """
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 
 import torch
@@ -100,7 +101,9 @@ def sonic_raymer(phi, vsh, v_qtz, v_cal, v_dol, ep: EndPoints | None = None):
 def log10_rt_archie(phi, sw, m, n, rw, a=1.0):
     """log10 of Archie resistivity: Rt = a Rw / (phi^m Sw^n)."""
     phi, sw = _clamp01(phi), _clamp01(sw)
-    return torch.log10(torch.as_tensor(a * rw)) - m * torch.log10(phi) - n * torch.log10(sw)
+    arw = a * rw
+    log_arw = torch.log10(arw) if torch.is_tensor(arw) else math.log10(arw)
+    return log_arw - m * torch.log10(phi) - n * torch.log10(sw)
 
 
 def conductivity_archie(phi, sw, m, n, rw, a=1.0):
