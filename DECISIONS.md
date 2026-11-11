@@ -20,8 +20,8 @@
 | D16 | 2026-11-11 | Lab-GPU workflow: setup script, one-command runner per experiment, results pushed to a branch (small files only). Machine specs unknown: nothing assumed. | User condition 7. |
 | D17 | 2026-11-11 | References verified by web search only; DOIs recorded only when seen in a search result. Entries recalled from memory are marked TODO-VERIFY. | api.crossref.org / doi.org are not allowed hosts. || D18 | 2026-11-11 | GATE 2 = APPROVED (user). Claim wording "to our knowledge"; primary journal Computers & Geosciences, alternatives Mathematical Geosciences and Petroleum Science. Wider full-text check before submission, read-status recorded in docs/literature_gap.md. | User decision. |
 | D19 | 2026-11-11 | School Trust 4-4 core = labelled case study only (digitised values; core saturations are not in-situ). | User condition 5. |
-| D20 | 2026-11-11 | PRE-REGISTERED DECISION RULE (written before any inversion training; see section below). | User condition 3. |
-Pending (owner: user): lab PC specs; LICENSE choice (Phase 6).
+| D20 | 2026-11-11 | PRE-REGISTERED DECISION RULE (written before any inversion training; see section below). | User condition 3. || D21 | 2026-11-11 | D20 result: OUTCOME 2. m separable (2 of 3 seeds, narrow margin); n not separable (0 of 3; null control failed); f_micro not separable (0 of 3). Spatially varying m AND n claim is dropped. Stopped for user approval of the reframed claim. | results/identifiability/summary.json, docs/identifiability.md. |
+Pending (owner: user): approval of reframed claim (Gate 2b); lab PC specs; LICENSE choice (Phase 6).
 
 
 ## D20: pre-registered identifiability decision rule (fixed before any training run)

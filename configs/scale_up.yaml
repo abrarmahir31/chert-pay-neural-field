@@ -19,3 +19,6 @@ train:
   batch_size: 65536
   steps: 30000
   lr: 1.0e-3
+identifiability:
+  seeds: [0, 1, 2, 3, 4]
+  steps: 10000

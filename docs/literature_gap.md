@@ -11,6 +11,25 @@ closely related conference paper could have been missed. "Verified" below means 
 authors and venue were seen in a search result; DOIs are given only when seen. Before
 submission a full-text read of the closest papers and a Scopus / OnePetro check are needed.
 
+## Read status (updated 11 Nov 2026)
+
+| Status | Papers |
+|---|---|
+| Read in full | none yet |
+| Abstract / catalogue record / search snippet only | all works in the gap table |
+| Bibliographic data confirmed on Crossref | rows 1 to 5, 9, 10 (Sun et al. 2023), 11 (three AAPG papers), 12, 13 and both Scientific Reports papers of row 8 |
+| Not verifiable so far | Duren 1967; Raymer et al. 1980; Simandoux 1963; the thesis-level work of row 7; neural-field preprints of 2025 to 2026 in row 10 |
+
+Corrections after the Crossref check: row 3 is Tian, Wang, Li and Lai 2026, Geoenergy Science
+and Engineering 257, 214246; row 4 was published as Vashisth and Mukerji 2022, The Leading
+Edge 41(12), 840-846; row 5 is Geophysics 89(2), M17-M32; row 12 is Interpretation 10(4),
+T707-T724 (2022); row 8 authors are Bagheri et al. 2026 (m) and Kumar et al. 2025 (n).
+
+Still to do before submission (user condition, Gate 2): full-text reading of the closest
+papers and a wider search of arXiv, ESS Open Archive and SPE/SPWLA (OnePetro). Those hosts are
+not reachable from this environment (arxiv.org, essopenarchive.org, onepetro.org would each need
+to be allowed, or the PDFs supplied).
+
 ## Gap table
 
 Columns: Labels = needs core or interpreted labels to train. Params = rock-physics parameters

@@ -1,4 +1,5 @@
-.PHONY: install data audit test lint
+.PHONY: install data audit test lint synthetic identifiability
+CONFIG ?= configs/cpu_small.yaml
 PY ?= python
 
 install:
@@ -17,3 +18,9 @@ test:
 
 lint:
 	ruff check src scripts tests
+
+synthetic:       ## synthetic benchmark with known truth (CONFIG=configs/scale_up.yaml on a GPU machine)
+	$(PY) scripts/make_synthetic.py --config $(CONFIG)
+
+identifiability: ## pre-registered identifiability study (DECISIONS.md D20)
+	$(PY) scripts/run_identifiability.py --config $(CONFIG)

@@ -27,9 +27,11 @@ class SynthConfig:
     n_field: tuple = (1.9, 0.25, 20.0)
     fmic_field: tuple = (0.35, 0.25, 12.0)
     rw: float = 0.045               # ohm.m at reservoir temperature (constant)
-    rmf: float = 0.25
+    rmf: float = 0.25               # median mud-filtrate resistivity; true value varies per well
+    rmf_spread: float = 0.30        # log-normal sigma of the true per-well Rmf
+    rmf_header_error: float = 0.15  # log-normal sigma of the error of the Rmf known to the model
+    sxo_exp_range: tuple = (0.12, 0.30)  # per-well flushing exponent k in Sxo = Sw^k (unknown to model)
     frac_wet_wells: float = 0.25    # wells with no hydrocarbon column
-    resid_hc_flushed: float = 0.5   # Sxo = Sw^(1/5)-like flushing strength is derived below
     noise: dict = None              # per-curve noise std
     p_missing: dict = None          # probability a well lacks the curve
     nphi_offset_std: float = 0.01   # per-well neutron nuisance (matrix convention / calibration)
@@ -93,7 +95,10 @@ def make_benchmark(cfg: SynthConfig | None = None) -> dict:
     sw_irr_mac = np.clip(0.10 + 0.04 / np.maximum(phi, 0.03), 0.1, 1.0)
     sw_mac = np.clip(sw_irr_mac + (1 - sw_irr_mac) * trans, 0.02, 1.0)
     sw_mac = np.where(wet[:, None], 1.0, sw_mac)
-    sxo_mac = sw_mac ** 0.2                                       # flushing by mud filtrate
+    k_w = rng.uniform(*cfg.sxo_exp_range, W)
+    sxo_mac = sw_mac ** k_w[:, None]                              # flushing by mud filtrate
+    rmf_w = cfg.rmf * np.exp(rng.normal(0, cfg.rmf_spread, W))
+    rmf_obs = rmf_w * np.exp(rng.normal(0, cfg.rmf_header_error, W))
 
     T = lambda a: torch.as_tensor(a, dtype=torch.float64)  # noqa: E731
     mT, nT, fT = (T(a)[:, None] for a in (m_w, n_w, f_w))
@@ -107,10 +112,10 @@ def make_benchmark(cfg: SynthConfig | None = None) -> dict:
     gr = fw.gamma_ray(T(vsh) / 0.4, T(gr_clean), T(gr_sh))
     if cfg.forward_resistivity == "dual_porosity":
         lrt = fw.log10_rt_dual_porosity(T(phi), T(sw_mac), fT, mT, nT, cfg.rw, vsh=T(vsh))
-        lrxo = fw.log10_rt_dual_porosity(T(phi), T(sxo_mac), fT, mT, nT, cfg.rmf, vsh=T(vsh))
+        lrxo = fw.log10_rt_dual_porosity(T(phi), T(sxo_mac), fT, mT, nT, T(rmf_w)[:, None], vsh=T(vsh))
     else:
         lrt = fw.log10_rt_archie(T(phi), T(sw_mac), mT, nT, cfg.rw)
-        lrxo = fw.log10_rt_archie(T(phi), T(sxo_mac), mT, nT, cfg.rmf)
+        lrxo = fw.log10_rt_archie(T(phi), T(sxo_mac), mT, nT, T(rmf_w)[:, None])
 
     clean = dict(RHOB=rhob, NPHI=nphi, GR=gr, LRT=lrt, LRXO=lrxo, DT=dt, PE=pe)
     nphi_off = rng.normal(0, cfg.nphi_offset_std, (W, 1))
@@ -130,6 +135,6 @@ def make_benchmark(cfg: SynthConfig | None = None) -> dict:
                  sw_total=fw.total_sw(T(sw_mac), fT).numpy(),
                  bvh=fw.bulk_volume_hydrocarbon(T(phi), T(sw_mac), fT).numpy(),
                  wet_well=wet, contact_ft=contact[:, 0], nphi_offset=nphi_off[:, 0],
-                 rhob_offset=rhob_off[:, 0], gr_clean=gr_clean[:, 0], gr_shale=gr_sh[:, 0])
-    return dict(xy_km=xy, z_ft=z, obs=obs, mask=mask, truth=truth,
+                 rhob_offset=rhob_off[:, 0], sxo_exp=k_w, rmf=rmf_w, gr_clean=gr_clean[:, 0], gr_shale=gr_sh[:, 0])
+    return dict(xy_km=xy, z_ft=z, rmf_obs=rmf_obs, obs=obs, mask=mask, truth=truth,
                 clean={k: v.numpy() for k, v in clean.items()}, config=asdict(cfg))
