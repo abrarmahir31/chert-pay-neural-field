@@ -29,7 +29,7 @@ def main() -> None:
     d = make_benchmark(sc)
     out = ROOT / "data/synthetic"
     out.mkdir(parents=True, exist_ok=True)
-    flat = {"xy_km": d["xy_km"], "z_ft": d["z_ft"]}
+    flat = {"xy_km": d["xy_km"], "z_ft": d["z_ft"], "rmf_obs": d["rmf_obs"]}
     for grp in ("obs", "mask", "truth", "clean"):
         flat.update({f"{grp}/{k}": v for k, v in d[grp].items()})
     np.savez_compressed(out / f"benchmark_seed{sc.seed}.npz", **flat)

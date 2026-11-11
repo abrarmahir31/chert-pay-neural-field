@@ -1,7 +1,7 @@
-% Verified = title/authors/venue seen in a web search result on 2026-11-11 (see docs/literature_gap.md).
-% DOIs are included only when seen in a search result. Fields not seen are marked TODO-VERIFY.
-% Entries recalled from memory only are kept at the bottom, each marked TODO-VERIFY, and must
-% not be cited in the manuscript until checked.
+% Verification status (2026-11-11): every entry in the first block was confirmed against the
+% Crossref API (scripts/check_references.py): DOI, authors, title, venue, year, volume, pages.
+% Entries in the last block could NOT be verified (no Crossref record found) and must not be
+% cited until checked by hand; they are kept as comments marked TODO-VERIFY.
 
 @article{watney2001chat,
   author  = {Watney, W. Lynn and Guy, Willard J. and Byrnes, Alan P.},
@@ -12,14 +12,33 @@
 @article{montgomery1998chat,
   author  = {Montgomery, Scott L. and Mullarkey, James C. and Longman, Mark W. and Colleary, William M. and Rogers, James P.},
   title   = {Mississippian ``chat'' reservoirs, south {K}ansas: low-resistivity pay in a complex chert reservoir},
-  journal = {AAPG Bulletin}, year = {1998}, volume = {82}, number = {2}, pages = {187--205},
-  note    = {DOI TODO-VERIFY}
+  journal = {AAPG Bulletin}, year = {1998}, volume = {82}, number = {1}, pages = {187--205},
+  doi     = {10.1306/1D9BC3C7-172D-11D7-8645000102C1865D},
+  note    = {issue 1 per Crossref and the AAPG archive path (January); one search summary said issue 2. Confirm.}
 }
 @article{rogers2001chat,
   author  = {Rogers, Suzanne M.},
   title   = {Deposition and diagenesis of {M}ississippian chat reservoirs, north-central {O}klahoma},
   journal = {AAPG Bulletin}, year = {2001}, volume = {85}, number = {1}, pages = {115--129},
-  note    = {author first name and DOI TODO-VERIFY}
+  doi     = {10.1306/8626C771-173B-11D7-8645000102C1865D}
+}
+@article{bodeomoleye2022pores,
+  author  = {Bode-Omoleye, Ibukun and Grammer, G. Michael and Zhang, Chi and Molnar, Adam},
+  title   = {Pore system characterization in diagenetically complex {M}ississippian-aged carbonate reservoirs ({K}ansas, {USA})},
+  journal = {Interpretation}, year = {2022}, volume = {10}, number = {4}, pages = {T707--T724},
+  doi     = {10.1190/INT-2021-0190.1}
+}
+@article{archie1942,
+  author  = {Archie, G. E.},
+  title   = {The electrical resistivity log as an aid in determining some reservoir characteristics},
+  journal = {Transactions of the AIME}, year = {1942}, volume = {146}, number = {1}, pages = {54--62},
+  doi     = {10.2118/942054-G}
+}
+@article{wyllie1956,
+  author  = {Wyllie, M. R. J. and Gregory, A. R. and Gardner, L. W.},
+  title   = {Elastic wave velocities in heterogeneous and porous media},
+  journal = {Geophysics}, year = {1956}, volume = {21}, number = {1}, pages = {41--70},
+  doi     = {10.1190/1.1438217}
 }
 @article{shao2024piml,
   author  = {Shao, Rongbo and Wang, Hua and Xiao, Lizhi},
@@ -30,40 +49,65 @@
 @article{pothana2025pinn,
   author  = {Pothana, Prasad and Ling, Kegang},
   title   = {Physics-integrated neural networks for improved mineral volumes and porosity estimation from geophysical well logs},
-  journal = {Energy Geoscience}, year = {2025},
-  note    = {volume, article number and DOI TODO-VERIFY}
+  journal = {Energy Geoscience}, year = {2025}, volume = {6}, number = {2}, pages = {100410},
+  doi     = {10.1016/j.engeos.2025.100410}
 }
-@misc{vashisth2022rwpinn,
-  author = {Vashisth, Divakar and Mukerji, Tapan},
-  title  = {Direct estimation of porosity from seismic data using rock and wave physics informed neural networks ({RW-PINN})},
-  year   = {2022}, eprint = {2210.00042}, archivePrefix = {arXiv},
-  note   = {author first names TODO-VERIFY}
+@article{tian2026satunn,
+  author  = {Tian, Yinhong and Wang, Guiwen and Li, Hongbin and Lai, Jin},
+  title   = {High-fidelity saturation prediction using physics-informed attention neural network},
+  journal = {Geoenergy Science and Engineering}, year = {2026}, volume = {257}, pages = {214246},
+  doi     = {10.1016/j.geoen.2025.214246}
+}
+@article{vashisth2022rwpinn,
+  author  = {Vashisth, Divakar and Mukerji, Tapan},
+  title   = {Direct estimation of porosity from seismic data using rock- and wave-physics-informed neural networks},
+  journal = {The Leading Edge}, year = {2022}, volume = {41}, number = {12}, pages = {840--846},
+  doi     = {10.1190/tle41120840.1}
 }
 @article{li2024ppinn,
   author  = {Li, Peng and Liu, Mingliang and Alfarraj, Motaz and Tahmasebi, Pejman and Grana, Dario},
   title   = {Probabilistic physics-informed neural network for seismic petrophysical inversion},
-  year    = {2024},
-  note    = {journal (reported as Geophysics), volume, pages and DOI TODO-VERIFY}
+  journal = {Geophysics}, year = {2024}, volume = {89}, number = {2}, pages = {M17--M32},
+  doi     = {10.1190/geo2023-0214.1}
 }
 @article{hillier2023geoinr,
   author  = {Hillier, Michael and Wellmann, Florian and de Kemp, Eric A. and Brodaric, Boyan and Schetselaar, Ernst and B{\'e}dard, Karine},
   title   = {{GeoINR} 1.0: an implicit neural network approach to three-dimensional geological modelling},
   journal = {Geoscientific Model Development}, year = {2023}, volume = {16}, number = {23}, pages = {6987--7012},
-  doi     = {10.5194/gmd-16-6987-2023},
-  note    = {exact title wording and end page TODO-VERIFY}
+  doi     = {10.5194/gmd-16-6987-2023}
 }
-@article{bodeomoleye2022pores,
-  author  = {Bode-Omoleye, Ibukun and Grammer, G. Michael and Zhang, Chi and Molnar, Adam},
-  title   = {Pore system characterization in diagenetically complex {M}ississippian-aged carbonate reservoirs ({K}ansas, {USA})},
-  journal = {Interpretation}, volume = {10},
-  note    = {year (probably 2022), issue, pages and DOI TODO-VERIFY}
+@article{sun2023ifwi,
+  author  = {Sun, Jian and Innanen, Kristopher and Zhang, Tianze and Trad, Daniel},
+  title   = {Implicit seismic full waveform inversion with deep neural representation},
+  journal = {Journal of Geophysical Research: Solid Earth}, year = {2023}, volume = {128}, number = {3},
+  doi     = {10.1029/2022JB025964},
+  note    = {article number not returned by Crossref}
 }
-@misc{kgs2002chat,
-  author = {{Kansas Geological Survey}},
-  title  = {Characterization of {M}ississippian {O}sage chat in south-central {K}ansas},
-  howpublished = {Kansas Geological Survey Open-File Report 2002-50},
-  year   = {2002}, url = {https://www.kgs.ku.edu/PRS/Poster/2002/2002-50/},
-  note   = {personal authors TODO-VERIFY}
+@article{gao2022lrlc,
+  author  = {Gao, Lun and Xie, Ran-Hong and Xiao, Li-Zhi and Wang, Shuai and Xu, Chen-Yu},
+  title   = {Identification of low-resistivity-low-contrast pay zones in the feature space with a multi-layer perceptron based on conventional well log data},
+  journal = {Petroleum Science}, year = {2022}, volume = {19}, number = {2}, pages = {570--580},
+  doi     = {10.1016/j.petsci.2021.12.012},
+  note    = {title end truncated in the Crossref printout; confirm wording}
+}
+@article{bagheri2026m,
+  author  = {Bagheri, Hassan and Moradzadeh, Ali and Mohebian, Reza and Kamari, Mosayeb},
+  title   = {Ensemble machine learning approach for prediction of cementation factor (m) using well logs in heterogeneous reservoirs},
+  journal = {Scientific Reports}, year = {2026}, volume = {16},
+  doi     = {10.1038/s41598-026-68805-y}
+}
+@article{kumar2025n,
+  author  = {Kumar, Abhinav and Rodrigues, Paul and Kareem, A. K. and Sekac, Tingneyuc and Abdullaev, Sherzod and Chohan, Jasgurpreet Singh and Manjunatha, R.},
+  title   = {Modeling saturation exponent of underground hydrocarbon reservoirs using robust machine learning methods},
+  journal = {Scientific Reports}, year = {2025}, volume = {15},
+  doi     = {10.1038/s41598-024-84556-0},
+  note    = {author list may be longer than the seven names returned; volume to confirm}
+}
+@inproceedings{kendall2018,
+  author    = {Kendall, Alex and Gal, Yarin and Cipolla, Roberto},
+  title     = {Multi-task learning using uncertainty to weigh losses for scene geometry and semantics},
+  booktitle = {2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  year      = {2018}, pages = {7482--7491}, doi = {10.1109/CVPR.2018.00781}
 }
 @misc{kgsdata,
   author = {{Kansas Geological Survey}},
@@ -71,18 +115,23 @@
   howpublished = {\url{https://www.kgs.ku.edu/PRS/petroDB.html}},
   note   = {archives dated 9 October 2026, accessed 11 November 2026. The source of this material is the Kansas Geological Survey website at http://www.kgs.ku.edu/. All Rights Reserved.}
 }
+@misc{kgs2002chat,
+  author = {{Kansas Geological Survey}},
+  title  = {Characterization of {M}ississippian {O}sage chat in south-central {K}ansas},
+  howpublished = {Kansas Geological Survey Open-File Report 2002-50, \url{https://www.kgs.ku.edu/PRS/Poster/2002/2002-50/}},
+  year   = {2002},
+  note   = {web pages seen; personal authors not confirmed (corporate author used)}
+}
 
-% ---------------------------------------------------------------- TODO-VERIFY (memory only)
-% archie1942   Archie, G.E., 1942, The electrical resistivity log as an aid in determining some
-%              reservoir characteristics, Trans. AIME 146, 54-62.                 TODO-VERIFY
-% simandoux1963 Simandoux, P., 1963, Revue de l'Institut Francais du Petrole.      TODO-VERIFY
-% wyllie1956   Wyllie, Gregory and Gardner, 1956, Geophysics 21, 41-70.           TODO-VERIFY
-% raymer1980   Raymer, Hunt and Gardner, 1980, SPWLA 21st Annual Symposium.       TODO-VERIFY
-% duren1967    Duren, J.D., 1967, Glick field chert study (cited by KGS OFR 2002-50). TODO-VERIFY
-% sun2023ifwi  Implicit seismic full waveform inversion with deep neural representation. TODO-VERIFY
-% lakshmi2017  Deep ensembles (Lakshminarayanan, Pritzel, Blundell, NeurIPS 2017).  TODO-VERIFY
-% tancik2020   Fourier features (Tancik et al., NeurIPS 2020).                    TODO-VERIFY
-% kendall2018  Uncertainty loss weighting (Kendall, Gal, Cipolla, CVPR 2018).     TODO-VERIFY
-% SatuNN 2025  doi 10.1016/j.geoen.2025.214246 (title/authors not seen).          TODO-VERIFY
-% SciRep 2026 ensemble m (s41598-026-68805-y); SciRep 2024 n (s41598-024-84556-0). TODO-VERIFY
-% gao2022lrlc  LRLC pay with MLP + DBSCAN, Petroleum Science 2022.                TODO-VERIFY
+% ------------------------------------------------- TODO-VERIFY: NOT verified, DO NOT CITE YET
+% raymer1980   Raymer, Hunt and Gardner, 1980, An improved sonic transit time-to-porosity
+%              transform, SPWLA 21st Annual Logging Symposium. No Crossref record. TODO-VERIFY
+% simandoux1963 Simandoux, P., 1963, Revue de l'Institut Francais du Petrole. Not looked up
+%              successfully. TODO-VERIFY
+% duren1967    Duren, J. D., 1967, Glick field chert study, quoted on KGS OFR 2002-50 pages
+%              only; original not seen. TODO-VERIFY
+% tancik2020   Tancik et al., 2020, Fourier features let networks learn high frequency
+%              functions in low dimensional domains, NeurIPS. No Crossref record. TODO-VERIFY
+% lakshmi2017  Lakshminarayanan, Pritzel and Blundell, 2017, Simple and scalable predictive
+%              uncertainty estimation using deep ensembles, NeurIPS. No Crossref record. TODO-VERIFY
+% Mineral end-point constants: a log-interpretation chart book reference is still needed. TODO-VERIFY
