@@ -1,0 +1,45 @@
+{
+ "script": "scripts/audit_report.py",
+ "seed": null,
+ "window_ft_below_top": 50.0,
+ "definition_producer": "status oil/gas (incl. P&A) AND KGS producing formation contains MISS",
+ "definition_dry": "status D&A",
+ "rdeep_median_ohmm": {
+  "miss_producers": {
+   "n_wells": 378,
+   "q25": 4.2055750000000005,
+   "median": 5.96175,
+   "q75": 8.07035
+  },
+  "dry_holes": {
+   "n_wells": 47,
+   "q25": 6.1027249999999995,
+   "median": 9.767602,
+   "q75": 14.35825
+  }
+ },
+ "phi_dn_median": {
+  "miss_producers": {
+   "n_wells": 378,
+   "q25": 0.15821897368421056,
+   "median": 0.18785616812865497,
+   "q75": 0.21058817726608187
+  },
+  "dry_holes": {
+   "n_wells": 47,
+   "q25": 0.0962798640350877,
+   "median": 0.13229151169590647,
+   "q75": 0.1863671856725146
+  }
+ },
+ "mannwhitney_rdeep_prod_vs_dry_p": 2.570676475313463e-06,
+ "producers_share_of_porous_samples_rdeep_lt_5": {
+  "n_wells": 370,
+  "q25": 0.2034953495349535,
+  "median": 0.4284251675353686,
+  "q75": 0.7029702970297029
+ },
+ "producers_with_median_rdeep_lt_5": 139,
+ "producers_with_median_rdeep_lt_10": 329,
+ "note": "Descriptive only. Completion intervals are not used; 'producer' is well-level."
+}
