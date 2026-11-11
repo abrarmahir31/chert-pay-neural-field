@@ -10,5 +10,13 @@
 | D6 | 2026-11-11 | "Usable" = at least 20 ft of co-located GR + density + neutron + deep resistivity inside the Mississippian. | Minimum set for a joint density-neutron-resistivity inversion. |
 | D7 | 2026-11-11 | CPU-only environment (4 cores, 15 GB RAM, no GPU): plan small MLP field (about 4 x 128), ensembles of 5, mini-batches of samples. | Hardware. To be confirmed in Phase 3. |
 | D8 | 2026-11-11 | Dedicated cloud environment `chert-pay-neural-field` with hosts for Kaggle and KGS only. | Keep the Default environment unchanged. |
-
-Pending (owner: user): Gate 1 go/no-go; LICENSE choice (Phase 6).
+| D9 | 2026-11-11 | GATE 1 = GO (user). KGS LAS data, 625-well core set. | User decision. |
+| D10 | 2026-11-11 | Sonic and PE are OPTIONAL loss terms, masked where absent; no headline result may depend on sonic coverage. | User condition 1. |
+| D11 | 2026-11-11 | Neutron matrix / unit convention is an uncertain nuisance parameter (per-well, with documented prior) plus a sensitivity test; stated as a limitation. | User condition 2; the second neutron curve is redundant in 135/136 wells. |
+| D12 | 2026-11-11 | Environmental corrections unknown per file: add sensitivity analysis (perturbed per-well offsets/gains), list as limitation. | User condition 3. |
+| D13 | 2026-11-11 | Validation hierarchy: (a) blind-well + spatially blocked curve reconstruction, (b) production status (397 Mississippian producers vs 47 dry) with AUC and bootstrap CIs, (c) School Trust 4-4 core as a single-well case study only. | User condition 4. |
+| D14 | 2026-11-11 | Premise check (producers less resistive than dry holes) is motivation only, never evidence for the method. | User condition 5. |
+| D15 | 2026-11-11 | One YAML config drives every training/ablation run; `configs/cpu_small.yaml` runs here, `configs/scale_up.yaml` for a GPU machine; no code changes between them. | User condition 6. |
+| D16 | 2026-11-11 | Lab-GPU workflow: setup script, one-command runner per experiment, results pushed to a branch (small files only). Machine specs unknown: nothing assumed. | User condition 7. |
+| D17 | 2026-11-11 | References verified by web search only; DOIs recorded only when seen in a search result. Entries recalled from memory are marked TODO-VERIFY. | api.crossref.org / doi.org are not allowed hosts. |
+Pending (owner: user): Gate 2 approval; lab PC specs; LICENSE choice (Phase 6).

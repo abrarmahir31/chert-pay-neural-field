@@ -1,0 +1,78 @@
+{
+ "script": "scripts/make_synthetic.py",
+ "config_file": "cpu_small.yaml",
+ "seed": 0,
+ "config": {
+  "n_wells": 60,
+  "n_samples": 200,
+  "extent_km": [
+   57.0,
+   52.0
+  ],
+  "seed": 0,
+  "m_field": [
+   2.1,
+   0.35,
+   15.0
+  ],
+  "n_field": [
+   1.9,
+   0.25,
+   20.0
+  ],
+  "fmic_field": [
+   0.35,
+   0.25,
+   12.0
+  ],
+  "rw": 0.045,
+  "rmf": 0.25,
+  "frac_wet_wells": 0.25,
+  "resid_hc_flushed": 0.5,
+  "noise": {
+   "RHOB": 0.015,
+   "NPHI": 0.01,
+   "GR": 4.0,
+   "LRT": 0.03,
+   "LRXO": 0.05,
+   "DT": 1.5,
+   "PE": 0.15
+  },
+  "p_missing": {
+   "DT": 0.8,
+   "PE": 0.59,
+   "LRXO": 0.05
+  },
+  "nphi_offset_std": 0.01,
+  "rhob_offset_std": 0.01,
+  "forward_resistivity": "dual_porosity"
+ },
+ "n_wells": 60,
+ "n_samples_per_well": 200,
+ "wet_wells": 17,
+ "wells_with": {
+  "RHOB": 60,
+  "NPHI": 60,
+  "GR": 60,
+  "LRT": 60,
+  "LRXO": 57,
+  "DT": 16,
+  "PE": 19
+ },
+ "truth_ranges": {
+  "m": [
+   1.7605248238102384,
+   2.4323656329511367
+  ],
+  "n": [
+   1.6664918890895963,
+   2.1463256445512235
+  ],
+  "f_micro": [
+   0.14735130358518894,
+   0.5883891256841991
+  ]
+ },
+ "median_rt_pay_ohmm": 5.368988017926105,
+ "median_rt_wet_ohmm": 3.765886428745533
+}
