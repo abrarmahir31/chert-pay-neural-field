@@ -1,0 +1,21 @@
+# Small configuration: runs on a 4-core CPU with 15 GB RAM (this is what CI-scale checks use).
+# The SAME scripts read configs/scale_up.yaml on a GPU machine; no code changes.
+name: cpu_small
+device: auto            # auto = cuda if available, else cpu
+seeds: [0, 1, 2]
+synthetic:
+  n_wells: 60
+  n_samples: 200
+  seed: 0
+# Consumed by the Phase 3 training scripts (not implemented before Gate 2 approval):
+field:
+  encoder: fourier      # fourier | hashgrid
+  n_frequencies: 6
+  hidden: 128
+  layers: 4
+ensemble:
+  members: 5
+train:
+  batch_size: 8192
+  steps: 4000
+  lr: 1.0e-3

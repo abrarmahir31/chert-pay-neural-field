@@ -11,6 +11,7 @@ python -m pip install -e ".[dev,data]"
 make data     # KGS archives + original LAS files into data/raw (not committed)
 make audit    # results/audit/*  (inventory, mnemonic table, summary JSON)
 make test
+python scripts/make_synthetic.py --config configs/cpu_small.yaml
 ```
 
 ## Data

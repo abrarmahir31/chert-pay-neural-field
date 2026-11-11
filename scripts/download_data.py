@@ -99,6 +99,19 @@ def get_las(limit: int | None, delay: float, workers: int = 4) -> None:
     print(f"LAS files requested: {len(rows)}, failed: {len(failed)}")
 
 
+CORE_WELLS = {"1006015457": "School Trust 4-4, API 15-007-21038"}  # KGS core analyses, Barber Co.
+CORE_URL = "https://chasm.kgs.ku.edu/ords/gemini.dpa_core_data_pkg.build_core_data_web_page?sKID={kid}"
+
+
+def get_core() -> None:
+    out = RAW / "kgs" / "core"
+    out.mkdir(parents=True, exist_ok=True)
+    for kid in CORE_WELLS:
+        dest = out / f"{kid}.html"
+        if not dest.exists():
+            dest.write_bytes(fetch(CORE_URL.format(kid=kid)))
+
+
 def get_kaggle() -> None:
     import os
 
@@ -116,6 +129,7 @@ def main() -> None:
     a = ap.parse_args()
     get_archives()
     get_las(a.limit, a.delay)
+    get_core()
     if a.kaggle:
         get_kaggle()
 

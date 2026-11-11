@@ -1,0 +1,21 @@
+# Scale-up configuration for a GPU workstation. Sizes are placeholders to be set from the lab PC specs.
+# (GPU model, VRAM, RAM not yet known: nothing is assumed beyond "a CUDA GPU").
+name: scale_up
+device: auto            # auto = cuda if available, else cpu
+seeds: [0, 1, 2, 3, 4]
+synthetic:
+  n_wells: 600
+  n_samples: 200
+  seed: 0
+# Consumed by the Phase 3 training scripts (not implemented before Gate 2 approval):
+field:
+  encoder: fourier      # fourier | hashgrid
+  n_frequencies: 10
+  hidden: 256
+  layers: 6
+ensemble:
+  members: 20
+train:
+  batch_size: 65536
+  steps: 30000
+  lr: 1.0e-3
