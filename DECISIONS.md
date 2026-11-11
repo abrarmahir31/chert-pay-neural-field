@@ -18,5 +18,33 @@
 | D14 | 2026-11-11 | Premise check (producers less resistive than dry holes) is motivation only, never evidence for the method. | User condition 5. |
 | D15 | 2026-11-11 | One YAML config drives every training/ablation run; `configs/cpu_small.yaml` runs here, `configs/scale_up.yaml` for a GPU machine; no code changes between them. | User condition 6. |
 | D16 | 2026-11-11 | Lab-GPU workflow: setup script, one-command runner per experiment, results pushed to a branch (small files only). Machine specs unknown: nothing assumed. | User condition 7. |
-| D17 | 2026-11-11 | References verified by web search only; DOIs recorded only when seen in a search result. Entries recalled from memory are marked TODO-VERIFY. | api.crossref.org / doi.org are not allowed hosts. |
-Pending (owner: user): Gate 2 approval; lab PC specs; LICENSE choice (Phase 6).
+| D17 | 2026-11-11 | References verified by web search only; DOIs recorded only when seen in a search result. Entries recalled from memory are marked TODO-VERIFY. | api.crossref.org / doi.org are not allowed hosts. || D18 | 2026-11-11 | GATE 2 = APPROVED (user). Claim wording "to our knowledge"; primary journal Computers & Geosciences, alternatives Mathematical Geosciences and Petroleum Science. Wider full-text check before submission, read-status recorded in docs/literature_gap.md. | User decision. |
+| D19 | 2026-11-11 | School Trust 4-4 core = labelled case study only (digitised values; core saturations are not in-situ). | User condition 5. |
+| D20 | 2026-11-11 | PRE-REGISTERED DECISION RULE (written before any inversion training; see section below). | User condition 3. |
+Pending (owner: user): lab PC specs; LICENSE choice (Phase 6).
+
+
+## D20: pre-registered identifiability decision rule (fixed before any training run)
+
+Test bed: synthetic benchmark (`chertfield.synthetic.benchmark`), 60 wells x 200 samples,
+dual-porosity truth, noise as in `SynthConfig.noise`, curve coverage as in the real data
+(shallow resistivity in about 95 % of wells, sonic about 20 %, PE about 41 %), per-well neutron
+and density offsets, per-well mud-filtrate resistivity known only to within 15 %, and a per-well
+flushing exponent that the model does not know. Three benchmark seeds (0, 1, 2).
+
+Metric, per parameter p in {m, n, f_micro}, at well level (model value at the well location
+versus true value): Pearson r and RMSE / SD(true).
+
+A parameter is declared **separable** only if, in the realistic base case, in at least 2 of 3
+seeds: r >= 0.70 AND RMSE <= 0.5 x SD(true). In addition a null control must pass: when the
+true n is constant, the estimated n field must not show structure
+(SD(n_hat) <= 0.5 x SD(n_true of the base case)).
+
+Outcomes:
+1. m and n both separable -> proceed with the spatially varying m and n claim.
+2. m separable, n not -> propose "n fixed, m spatially varying"; STOP for user approval.
+3. neither separable -> propose a field of ONE effective resistivity parameter; STOP for approval.
+The thresholds will not be changed after seeing results. Oracle variants (known flushing
+exponent, exact Rmf, no noise) are diagnostic only and cannot rescue a failed base case.
+Rock-property recovery (porosity, total Sw, bulk-volume hydrocarbon) is reported alongside
+but does not enter the rule.
