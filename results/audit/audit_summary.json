@@ -1,0 +1,125 @@
+{
+ "nphi_unk_vs_ls_wells_with_both": 136,
+ "nphi_unk_vs_ls_wells_identical_lt_0p002": 135,
+ "script": "scripts/audit_pass2.py",
+ "seed": null,
+ "las_files_in_kgs_index": 1054,
+ "las_files_downloaded": 1053,
+ "las_files_processed_ok": 1050,
+ "las_files_parse_error": 3,
+ "wells_total": 765,
+ "wells_with_coordinates": 765,
+ "elev_ref_counts": {
+  "KB": 741,
+  "GL": 15,
+  "DF": 8,
+  "TOPO": 1
+ },
+ "spud_year_quantiles": {
+  "0.0": 1937.0,
+  "0.1": 1981.0,
+  "0.25": 2009.0,
+  "0.5": 2011.0,
+  "0.75": 2014.0,
+  "1.0": 2026.0
+ },
+ "miss_top_source_counts": {
+  "kgs_pick": 615,
+  "idw_interp": 150
+ },
+ "miss_control_wells_all_barber": 4948,
+ "idw_loo_mae_ft": 21.35487001027946,
+ "idw_loo_p90_abs_ft": 35.61545639799829,
+ "miss_thickness_ft_quantiles": {
+  "0.1": 57.0,
+  "0.5": 206.0,
+  "0.9": 342.0
+ },
+ "wells_base_picked": 469,
+ "wells_logged_in_miss": 743,
+ "min_joint_ft_threshold": 20.0,
+ "wells_ge_thr_by_curve": {
+  "GR": 729,
+  "SP": 603,
+  "CALI": 634,
+  "RHOB": 551,
+  "DRHO": 590,
+  "PE": 266,
+  "DT": 132,
+  "DPHI_LS": 635,
+  "DPHI_SS": 30,
+  "DPHI_DOL": 29,
+  "NPHI_LS": 363,
+  "NPHI_SS": 200,
+  "NPHI_DOL": 199,
+  "NPHI_UNK": 409,
+  "SPHI": 114,
+  "RDEEP": 683,
+  "RMED": 598,
+  "RSHAL": 602,
+  "CDEEP": 340,
+  "MNOR": 274,
+  "MINV": 274,
+  "NPHI": 636,
+  "DEN": 644
+ },
+ "wells_usable_core_set_GR_DEN_NPHI_RDEEP": 625,
+ "wells_core_plus_DT": 124,
+ "wells_core_plus_PE": 259,
+ "wells_core_plus_shallow_or_medium_res": 594,
+ "wells_core_plus_DT_and_PE": 59,
+ "usable_nphi_source_counts": {
+  "LS": 361,
+  "assumed_LS": 263,
+  "header_LS": 1
+ },
+ "usable_den_source_counts": {
+  "RHOB": 544,
+  "from_DPHI_LS": 81
+ },
+ "usable_joint_ft_total": 151746.5,
+ "usable_joint_samples_0p5ft": 303493,
+ "usable_joint_ft_chat_top100": 61589.0,
+ "usable_joint_ft_median_per_well": 232.5,
+ "usable_top_source_counts": {
+  "kgs_pick": 499,
+  "idw_interp": 126
+ },
+ "usable_status_counts": {
+  "O&G": 258,
+  "OIL": 147,
+  "O&G-P&A": 52,
+  "D&A": 47,
+  "GAS": 41,
+  "OIL-P&A": 37,
+  "SWD": 25,
+  "GAS-P&A": 14,
+  "SWD-P&A": 3,
+  "LOC": 1
+ },
+ "usable_producing_from_miss": 397,
+ "usable_with_ip_reported": 158,
+ "usable_spud_year_quantiles": {
+  "0.0": 1961.0,
+  "0.1": 2008.0,
+  "0.5": 2012.0,
+  "0.9": 2021.0,
+  "1.0": 2026.0
+ },
+ "usable_extent_km": [
+  57.23079172223969,
+  51.943430215799935
+ ],
+ "usable_washout_frac_median": 0.0,
+ "medians_in_miss": {
+  "GR": 39.9853,
+  "DEN": 2.5687,
+  "NPHI": 0.140844,
+  "RDEEP": 8.377,
+  "DT": 67.1361,
+  "PE": 3.2756
+ },
+ "frac_miss_samples_rdeep_lt_5ohmm": 0.23670357153749963,
+ "wells_flagged_unit_conflict": 40,
+ "unmapped_mnemonics_in_ge5_files": 79
+}

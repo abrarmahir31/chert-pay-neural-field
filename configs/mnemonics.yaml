@@ -1,0 +1,41 @@
+# Curve-mnemonic normalisation table (built from the Phase-1 curve catalogue,
+# results/audit/curve_catalog.csv). Keys are canonical curves; aliases are matched on the
+# upper-cased ORIGINAL mnemonic, in priority order (first alias present in a file wins).
+# unit: canonical unit after conversion. kind: how values are converted/validated.
+canonical:
+  GR:       {unit: gAPI,  kind: gr,   aliases: [GR, GRGC, GAMMA, GK1, GRD, GRN, GRS, SGR, ECGR, HSGR, GRC, GCGR, HGR]}
+  SP:       {unit: mV,    kind: raw,  aliases: [SP, SPCG, SPC, SPBR]}
+  CALI:     {unit: in,    kind: cali, aliases: [DCAL, CALI, CALD, CLDC, CALN, HCAL, CALX, CAL, C13, LCAL, CALS, MCAL, MELCAL, CALM, C24, DFCAL]}
+  RHOB:     {unit: g/cc,  kind: rhob, aliases: [RHOB, DEN, HDEN, ZDEN, RHOZ, ZDNC, CDL, DENS, RHO8]}
+  DRHO:     {unit: g/cc,  kind: raw,  aliases: [RHOC, DRHO, DCOR, ZCOR, HDRA, DRH, HDRB]}
+  PE:       {unit: b/e,   kind: pe,   aliases: [PE, PEF, PDPE, PECLN, PEFZ, PEZ, PEDN]}
+  DT:       {unit: us/ft, kind: dt,   aliases: [DT, DT35, DTC, DTCO, AC, DELT, DT24, DTL]}
+  # density porosity by assumed matrix
+  DPHI_LS:  {unit: v/v,   kind: phi,  aliases: [DPOR, DPHI, DLIM, DPLS, DPRL, DPHZ, DPHL, PORD, DPHIL, DPH8, PORZ]}
+  DPHI_SS:  {unit: v/v,   kind: phi,  aliases: [DPHS, DPRS, DPSS]}
+  DPHI_DOL: {unit: v/v,   kind: phi,  aliases: [DPHD, DPRD, DPDL]}
+  # neutron porosity by matrix
+  NPHI_LS:  {unit: v/v,   kind: phi,  aliases: [CNLS, NPHL, NPLS, NPRL, NPOR_LS, CNCLS, CNC, NPHI_LS, TNPH_LS]}
+  NPHI_SS:  {unit: v/v,   kind: phi,  aliases: [CNSS, NPHS, NPRS, CNCSS]}
+  NPHI_DOL: {unit: v/v,   kind: phi,  aliases: [CNDL, NPHD, NPRD, CNCDL]}
+  # matrix not encoded in the mnemonic: resolved from header/description, else compared to NPHI_LS
+  NPHI_UNK: {unit: v/v,   kind: phi,  aliases: [CNPOR, NPHI, NPOR, TNPH, CN, PORN, NPHI_COMP, CNL, ENPH, HNPO, HTNP]}
+  SPHI:     {unit: v/v,   kind: phi,  aliases: [SPOR, SPRL, SPHI, PORS]}
+  # resistivity by depth of investigation
+  RDEEP:    {unit: ohm.m, kind: res,  aliases: [RILD, ILD, RT90, AT90, AHT90, AF90, AO90, HDRS, RTAO, R60O, RT60, RT, RDEP, LLD, RD, HLLD, RLA5, IDPH, ILDC, RIPD, R85O, DIL, RESD, AIT90, 90IN_2FT_R, AT60, AF60, AO60, 60IN_2FT_R]}
+  RMED:     {unit: ohm.m, kind: res,  aliases: [RILM, ILM, RT30, AT30, AHT30, AF30, AO30, HMRS, R40O, IMPH, RIPM, RLA3, RESM, AIT30, 30IN_2FT_R]}
+  RSHAL:    {unit: ohm.m, kind: res,  aliases: [RLL3, LL3, SFL, SFLU, RT10, AT10, AHT10, AF10, AO10, RT20, FEFE, R20O, LL8, SGRD, LGRD, RSFL, RFOC, RXO, MSFL, RLA1, LLS, RS, RESS, AIT10, AT20, AF20, AO20, 20IN_2FT_R, RXOZ]}
+  CDEEP:    {unit: mS/m,  kind: raw,  aliases: [CILD, CT90, COND, CIRD, CILDC]}
+  MNOR:     {unit: ohm.m, kind: res,  aliases: [MN, MNOR, MEL20, MNRL, NOR_RF, MNO, RNML, HMNO]}
+  MINV:     {unit: ohm.m, kind: res,  aliases: [MI, MINV, MEL15, INV_RF, MIN, RLML, HMIN]}
+# Present in files but deliberately NOT used as petrophysical inputs.
+ignored_examples: [NEU, PERM, RXORT, RXRT, BVTX, AVTX, ABHV, TBHV, LTEN, LSPD, TENS, ITT, CCL, NEUT, MINMK, DGA, TT3, AMP3]
+# Plausibility windows (canonical units) used for quality flags and outlier masking.
+valid_range:
+  GR: [0, 400]
+  RHOB: [1.8, 3.1]
+  PE: [0.8, 8]
+  DT: [38, 160]
+  CALI: [4, 22]
+  phi: [-0.15, 0.65]
+  res: [0.05, 20000]
