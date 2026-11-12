@@ -37,6 +37,7 @@ is the GPU configuration. `device: auto` in the config uses CUDA when available.
 | Unit tests | `make test` | |
 | Synthetic benchmark | `make synthetic CONFIG=configs/scale_up.yaml` | `results/synthetic/` |
 | Identifiability study (D20) | `make identifiability CONFIG=configs/scale_up.yaml` | `results/identifiability/` |
+| Benchmark v2 (D24a) | `make identifiability-v2 CONFIG=configs/scale_up.yaml` | `results/identifiability_v2/` |
 | Real-data training, baselines, ablations | added in Phase 3 and 4 after the Gate decision | |
 
 Approximate CPU cost of the identifiability study at the small configuration: 33 runs of about
