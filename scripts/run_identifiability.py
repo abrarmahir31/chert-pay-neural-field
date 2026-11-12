@@ -134,7 +134,8 @@ def main():
                "benchmark_seeds": cfg["identifiability"]["seeds"], "init_seed": "1000 + seed",
                "experiments": {k: v[2] for k, v in EXPERIMENTS.items()}}
     num = df.select_dtypes("number").columns.drop(["seed", "init_seed"])
-    summary["mean_by_experiment"] = json.loads(df.groupby("experiment")[num].mean().round(4).to_json(orient="index"))
+    means = df.groupby("experiment")[num].mean().round(4)
+    summary["mean_by_experiment"] = json.loads(means.to_json(orient="index"))
     if "base" in set(df.experiment):
         rule = {p: dict(zip(("separable", "seeds_passing"), separable(p), strict=True))
                 for p in ("m", "n", "f_micro")}

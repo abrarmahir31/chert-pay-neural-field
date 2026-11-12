@@ -135,6 +135,7 @@ def make_benchmark(cfg: SynthConfig | None = None) -> dict:
                  sw_total=fw.total_sw(T(sw_mac), fT).numpy(),
                  bvh=fw.bulk_volume_hydrocarbon(T(phi), T(sw_mac), fT).numpy(),
                  wet_well=wet, contact_ft=contact[:, 0], nphi_offset=nphi_off[:, 0],
-                 rhob_offset=rhob_off[:, 0], sxo_exp=k_w, rmf=rmf_w, gr_clean=gr_clean[:, 0], gr_shale=gr_sh[:, 0])
+                 rhob_offset=rhob_off[:, 0], sxo_exp=k_w, rmf=rmf_w, gr_clean=gr_clean[:, 0],
+                 gr_shale=gr_sh[:, 0])
     return dict(xy_km=xy, z_ft=z, rmf_obs=rmf_obs, obs=obs, mask=mask, truth=truth,
                 clean={k: v.numpy() for k, v in clean.items()}, config=asdict(cfg))
