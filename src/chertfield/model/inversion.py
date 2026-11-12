@@ -37,6 +37,7 @@ class InversionConfig:
     use_curves: tuple = ("RHOB", "NPHI", "GR", "LRT", "LRXO", "DT", "PE")
     fixed: dict = field(default_factory=dict)       # e.g. {"n": 2.0, "f_micro": 0.0}
     constant: tuple = ()                            # parameters learned as ONE scalar (no field)
+    spatial: str = "field"                          # "field" | "per_well" (no sharing) | "constant"
     know_flushing_exponent: float | None = None     # oracle: fix k
     know_rmf_exactly: bool = False                  # oracle: no Rmf correction
     prior_sd: dict = field(default_factory=lambda: dict(nphi_off=0.02, rhob_off=0.02, k=0.08,
@@ -65,9 +66,10 @@ class ParamField(nn.Module):
 
     names = ("m", "n", "f_micro")
 
-    def __init__(self, cfg: InversionConfig):
+    def __init__(self, cfg: InversionConfig, n_wells: int = 0):
         super().__init__()
         self.cfg = cfg
+        self.table = nn.Parameter(torch.zeros(max(n_wells, 1), len(self.names)))
         self.enc = FourierEncoder(cfg.n_frequencies)
         dims = [self.enc.out_dim] + [cfg.hidden] * cfg.layers
         net = []
@@ -81,6 +83,10 @@ class ParamField(nn.Module):
 
     def forward(self, xy_km):
         raw = self.net(self.enc(xy_km / self.extent))
+        if self.cfg.spatial == "per_well":      # one free value per training well, no sharing
+            raw = self.table
+        elif self.cfg.spatial == "constant":
+            raw = self.const.expand_as(raw)
         out = {}
         for i, k in enumerate(self.names):
             if k in self.cfg.fixed:
@@ -106,7 +112,7 @@ class JointInversion(nn.Module):
             self.register_buffer(f"mask_{c}", m)
         self.register_buffer("log_rmf_obs", f32(rmf_obs).log())
         W, N = self.obs_RHOB.shape
-        self.field = ParamField(cfg)
+        self.field = ParamField(cfg, W)
         # initial porosity from the limestone density-neutron average
         phi0 = (((2.71 - self.obs_RHOB) / 1.66 + self.obs_NPHI) / 2).clamp(0.02, 0.5)
         self.phi_raw = nn.Parameter(torch.logit(phi0 / 0.6))
