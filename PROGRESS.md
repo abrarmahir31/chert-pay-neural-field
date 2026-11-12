@@ -1,32 +1,35 @@
 # Progress (resume from here)
 
-## Status: benchmark v2 done. m claim FAILED (D25). Waiting for the user's framing decision. No real-data training has been run.
+## Status: benchmark v3 done; real-data run PREPARED, NOT STARTED. Waiting for the user's go-ahead (and choice of where to run it).
 
 ### Done
-- Phases 0 to 2; Gate 1 GO; Gate 2 approved; reframed claim D22 approved with conditions.
-- Pre-registered rules: D20 (v1), D24a (benchmark v2), D24b (real-data rule) in DECISIONS.md.
-- v1 identifiability (`make identifiability`): m passes narrowly, n and f_micro fail.
-- v2 (`make identifiability-v2`, 19 runs, about 25 min on 4 CPUs): m fails under a
-  different-family truth; pay indicator robust. See docs/identifiability.md (both parts).
-- Inversion model has `device` (auto = CUDA if available) and optional global Rw estimation.
-- References Crossref-verified (19); six TODO-VERIFY items are comments only, not citable.
+- Framing A approved (D26); entries and window pre-registered (D27, D28); results D25, D29.
+- Benchmarks: `make identifiability`, `make identifiability-v2`, `make pay-benchmark`
+  (docs/identifiability.md has all three parts).
+- Spatial split frozen: results/splits/spatial_blocks_v1.csv (never regenerate).
+- Real-data pipeline: src/chertfield/data/real.py, scripts/train_real.py, scripts/eval_real.py,
+  scripts/run_real_all.py; self-test `make real-standin` (synthetic stand-in, no real data).
+- 34 unit tests; GPU handled by `device: auto` with CPU fallback (never exercised on a GPU).
+- Runbook incl. Windows 10 native steps (untested on Windows): docs/lab_gpu_workflow.md.
 
-### Options put to the user (recommendation: A)
-A. Identifiability paper with a positive core: "what a label-free physics-informed inversion
-   can and cannot recover in low-resistivity chert pay". Parameters (m, n, f_micro) shown to be
-   non-identifiable or model-dependent; robust deliverable = spatial pay-indicator (BVH) maps
-   with ensemble + model-family + n uncertainty; real-data test by D24b (unchanged).
-B. Pure negative-results / identifiability study, synthetic plus a short real-data illustration.
+### Exact next steps
+1. On go-ahead: `make real CONFIG=configs/cpu_small.yaml` (here) or scale_up on the lab PC.
+   It runs archie/field, dual/field, archie/per_well, dual/per_well, archie/constant, then
+   eval_real.py -> results/real/evaluation.json with the D24b verdict.
+2. If no entry beats the best baseline (Bonferroni CI): STOP and report (rule D24b).
+3. Then Phase 4 remainder: sensitivity to n (1.6 to 2.2), neutron matrix, environmental
+   offsets; School Trust 4-4 case study (data/raw/kgs/core/1006015457.html, parse first);
+   pay-indicator maps with ensemble + model-family + n uncertainty. Gate 3.
+4. Wider full-text literature check (needs arxiv.org, essopenarchive.org, onepetro.org or PDFs).
+5. Candidate titles are in DECISIONS-independent note below.
 
-### Exact next steps after the decision (option A)
-1. Real-data loader from data/interim/miss_logs.parquet (core set, LRXO from RSHAL, optional
-   DT, PE; Rmf from LAS headers with a wide prior); mini-batching over wells.
-2. Freeze the spatial-block CV split in results/splits/ BEFORE any real-data fit.
-3. scripts/train.py --config (ensemble of 5; both resistivity model families as members of
-   the uncertainty analysis, to be pre-registered); pay maps and uncertainty.
-4. Baselines and D24b evaluation; STOP at Gate 3 (or earlier if D24b fails).
-5. Wider full-text literature check (needs arxiv.org, essopenarchive.org, onepetro.org or PDFs).
-6. Lab runbook: add the real-data runners once they exist.
+### Candidate working titles (user to choose)
+1. "What can label-free physics-informed log inversion recover? Identifiability limits and a
+   robust pay indicator for low-resistivity Mississippian chert, Kansas"
+2. "Identifiability before interpretation: an inverse-crime test of physics-informed
+   petrophysical inversion across 625 wells of Mississippian chat"
+3. "Label-free petrophysical inversion of low-resistivity chert pay: what the logs constrain,
+   what they do not, and an open 625-well benchmark"
 
 ### Environment notes
 - Cloud environment `chert-pay-neural-field`; allowed hosts: www.kaggle.com, api.kaggle.com,

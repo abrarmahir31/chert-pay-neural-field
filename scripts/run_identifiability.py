@@ -70,6 +70,18 @@ EXPERIMENTS_V2 = {
     "v2_archie_model": (V2_SYN, {"fixed": {"n": 1.8, "f_micro": 0.0}, "resistivity": "archie",
                                  "learn_rw": True}, "baseline: plain Archie inversion, no micro-porosity"),
 }
+# benchmark v3 (user conditions 4 and 5): low-contrast marginal wells + does spatial sharing help?
+V3_SYN = {**V2_SYN, "frac_wet_wells": 0.10, "frac_marginal_wells": 0.15}
+ARCHIE = {"fixed": {"n": 1.8, "f_micro": 0.0}, "resistivity": "archie", "learn_rw": True}
+EXPERIMENTS_V3 = {
+    "v3_archie_field": (V3_SYN, ARCHIE, "Archie inversion, spatial field (primary entry)"),
+    "v3_archie_perwell": (V3_SYN, {**ARCHIE, "spatial": "per_well"}, "Archie inversion, well by well"),
+    "v3_archie_const": (V3_SYN, {**ARCHIE, "spatial": "constant"}, "Archie inversion, one global m"),
+    "v3_dual_field": (V3_SYN, V2_INV, "dual-porosity inversion, spatial field (second entry)"),
+    "v3_dual_perwell": (V3_SYN, {**V2_INV, "spatial": "per_well"}, "dual-porosity, well by well"),
+    "v3_dual_const": (V3_SYN, {**V2_INV, "spatial": "constant"}, "dual-porosity, global parameters"),
+}
+EXPERIMENTS.update(EXPERIMENTS_V3)
 SINGLE_SEED = {"v2_n1.6", "v2_n2.0", "v2_n2.2", "v2_rw_known"}
 EXPERIMENTS.update(EXPERIMENTS_V2)
 
@@ -94,7 +106,7 @@ def run_one(name, seed, cfg):
         i_over["know_flushing_exponent"] = float(np.mean(sc.sxo_exp_range))
     f = cfg["field"]
     ic = InversionConfig(n_frequencies=f["n_frequencies"], hidden=f["hidden"], layers=f["layers"],
-                         steps=cfg["identifiability"]["steps_v2" if name.startswith("v2") else "steps"],
+                         steps=cfg["identifiability"]["steps_v2" if name[0] == "v" else "steps"],
                          rw=sc.rw, seed=1000 + seed, device=cfg.get("device", "cpu"),
                          extent_km=tuple(sc.extent_km), **i_over)
     set_seed(ic.seed)
@@ -116,12 +128,23 @@ def run_one(name, seed, cfg):
                          ("bvh", phi * (1 - sw_tot), t["bvh"])):
         mm = metrics(est, true)
         row.update({f"{k}_r": mm["r"], f"{k}_rmse": mm["rmse"]})
-    # well-level pay indicator: mean bulk-volume hydrocarbon of the upper 40 samples
+    # well-level pay indicator: mean bulk-volume hydrocarbon of the upper 40 samples (20 ft)
+    from sklearn.metrics import roc_auc_score
     pay_est = (phi * (1 - sw_tot))[:, :40].mean(1)
-    wet = t["wet_well"]
-    if wet.any() and (~wet).any():
-        from sklearn.metrics import roc_auc_score
-        row["auc_pay_vs_wet"] = float(roc_auc_score(~wet, pay_est))
+    # classical baseline, no inversion: density-neutron porosity, Archie m = n = 2, nominal Rw
+    o = d["obs"]
+    phi_dn = np.clip(((2.71 - o["RHOB"]) / 1.66 + o["NPHI"]) / 2, 0.01, 0.6)
+    sw_a = np.clip(np.sqrt(sc.rw / (phi_dn**2 * 10 ** o["LRT"])), 0, 1)
+    bvh_a = phi_dn * (1 - sw_a)
+    row["fixed_archie_bvh_r"] = metrics(bvh_a, t["bvh"])["r"]
+    pay_a = bvh_a[:, :40].mean(1)
+    wet, marg = t["wet_well"], t.get("marginal_well", np.zeros_like(t["wet_well"]))
+    prod = ~(wet | marg)
+    for tag, neg in (("wet", wet), ("marginal", marg), ("dry", wet | marg)):
+        if neg.any() and prod.any():
+            sel = prod | neg
+            row[f"auc_pay_vs_{tag}"] = float(roc_auc_score(prod[sel], pay_est[sel]))
+            row[f"fixed_archie_auc_vs_{tag}"] = float(roc_auc_score(prod[sel], pay_a[sel]))
     row.update({f"chi2_{k}": v for k, v in model.chi2_per_curve().items()})
     row.update(rw_hat=rw_hat, rw_true_mean=float(np.mean(t["rw"])), n_wells=sc.n_wells)
     return row
@@ -131,13 +154,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default=str(ROOT / "configs/cpu_small.yaml"))
     ap.add_argument("--only", default="")
-    ap.add_argument("--suite", default="v1", choices=["v1", "v2"])
+    ap.add_argument("--suite", default="v1", choices=["v1", "v2", "v3"])
     a = ap.parse_args()
     cfg = yaml.safe_load(open(a.config))
     torch.set_num_threads(cfg.get("threads", 4))
-    default = [n for n in EXPERIMENTS if n.startswith("v2") == (a.suite == "v2")]
+    suite_of = lambda n: n[:2] if n[:2] in ("v2", "v3") else "v1"  # noqa: E731
+    default = [n for n in EXPERIMENTS if suite_of(n) == a.suite]
     names = [n for n in a.only.split(",") if n] or default
-    out = ROOT / ("results/identifiability_v2" if a.suite == "v2" else "results/identifiability")
+    out = ROOT / {"v1": "results/identifiability", "v2": "results/identifiability_v2",
+                  "v3": "results/pay_indicator_benchmark"}[a.suite]
     out.mkdir(parents=True, exist_ok=True)
     rows = []
     for name in names:
@@ -147,7 +172,8 @@ def main():
             print(f"{name:15s} seed {seed} | m r={r['m_r']:.2f} e={r['m_rmse_over_sd']:.2f} "
                   f"ce={r['m_crmse_over_sd']:.2f} sd={r['m_sd_est']:.3f} | "
                   f"n r={r['n_r']:.2f} e={r['n_rmse_over_sd']:.2f} | f r={r['f_micro_r']:.2f} "
-                  f"e={r['f_micro_rmse_over_sd']:.2f} | bvh r={r['bvh_r']:.2f} | {r['seconds']}s",
+                  f"e={r['f_micro_rmse_over_sd']:.2f} | bvh r={r['bvh_r']:.2f} "
+                  f"auc dry={r.get('auc_pay_vs_dry', float('nan')):.2f} | {r['seconds']}s",
                   flush=True)
     df = pd.DataFrame(rows)
     path = out / "runs.csv"

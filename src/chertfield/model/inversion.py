@@ -99,7 +99,8 @@ class ParamField(nn.Module):
 
 
 class JointInversion(nn.Module):
-    def __init__(self, xy_km, obs: dict, mask: dict, rmf_obs, cfg: InversionConfig):
+    def __init__(self, xy_km, obs: dict, mask: dict, rmf_obs, cfg: InversionConfig,
+                 log_rmf_prior_sd=None):
         super().__init__()
         self.cfg = cfg
         torch.manual_seed(cfg.seed)
@@ -111,10 +112,13 @@ class JointInversion(nn.Module):
             self.register_buffer(f"obs_{c}", torch.nan_to_num(f32(obs[c])))
             self.register_buffer(f"mask_{c}", m)
         self.register_buffer("log_rmf_obs", f32(rmf_obs).log())
+        sd_rmf = cfg.prior_sd["log_rmf"] if log_rmf_prior_sd is None else log_rmf_prior_sd
+        self.register_buffer("log_rmf_sd", f32(sd_rmf) * torch.ones(len(self.xy)))
         W, N = self.obs_RHOB.shape
         self.field = ParamField(cfg, W)
         # initial porosity from the limestone density-neutron average
         phi0 = (((2.71 - self.obs_RHOB) / 1.66 + self.obs_NPHI) / 2).clamp(0.02, 0.5)
+        phi0 = torch.where(self.mask_RHOB & self.mask_NPHI, phi0, torch.full_like(phi0, 0.15))
         self.phi_raw = nn.Parameter(torch.logit(phi0 / 0.6))
         self.vsh_raw = nn.Parameter(torch.full((W, N), -2.0))
         self.min_raw = nn.Parameter(torch.zeros(W, N, 3))
@@ -187,18 +191,40 @@ class JointInversion(nn.Module):
         sd = self.cfg.prior_sd
         prior = 0.5 * ((self.nphi_off / sd["nphi_off"]) ** 2).sum()
         prior = prior + 0.5 * ((self.rhob_off / sd["rhob_off"]) ** 2).sum()
-        prior = prior + 0.5 * ((self.log_rmf_corr / sd["log_rmf"]) ** 2).sum()
+        prior = prior + 0.5 * ((self.log_rmf_corr[:, 0] / self.log_rmf_sd) ** 2).sum()
         prior = prior + 0.5 * (((self.flushing_exponent() - self.cfg.k_prior_mean) / sd["k"]) ** 2).sum()
         prior = prior + 0.5 * (self.log_rw_delta / self.cfg.rw_prior_log_sd) ** 2
         n_obs = sum(int(getattr(self, f"mask_{c}").sum()) for c in self.curves)
         return (sum(terms.values()) + prior) / n_obs, {k: float(v.detach()) for k, v in terms.items()}
 
+    def freeze_shared(self, trained: JointInversion):
+        """Blind-well mode: copy the shared parts (parameter field, global Rw) from a model
+        trained on other wells and freeze them; only per-sample and per-well terms are fitted."""
+        own_table = self.field.table.data.clone()
+        self.field.load_state_dict({k: v for k, v in trained.field.state_dict().items()
+                                    if k != "table"}, strict=False)
+        self.field.table.data = own_table
+        self.log_rw_delta.data = trained.log_rw_delta.data.clone()
+        self.log_rw_delta.requires_grad_(False)
+        if self.cfg.spatial != "per_well":
+            for p in self.field.parameters():
+                p.requires_grad_(False)
+
+    @torch.no_grad()
+    def pay_indicator(self):
+        """Per-sample bulk-volume hydrocarbon estimate (W x N), a RELATIVE indicator."""
+        _, p, par = self.predict()
+        return fw.bulk_volume_hydrocarbon(p["phi"], p["sw_macro"], par["f_micro"]).cpu().numpy()
+
     def fit(self, log_every: int = 0):
         cfg = self.cfg
         latent = [p for n, p in self.named_parameters()
                   if not n.startswith("field.") and p.requires_grad]
-        opt = torch.optim.Adam([{"params": self.field.parameters(), "lr": cfg.lr_field},
-                                {"params": latent, "lr": cfg.lr_latent}])
+        shared = [p for p in self.field.parameters() if p.requires_grad]
+        groups = [{"params": latent, "lr": cfg.lr_latent}]
+        if shared:
+            groups.append({"params": shared, "lr": cfg.lr_field})
+        opt = torch.optim.Adam(groups)
         sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, cfg.steps)
         hist = []
         for step in range(cfg.steps):
