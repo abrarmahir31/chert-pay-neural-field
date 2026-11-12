@@ -32,6 +32,8 @@ class SynthConfig:
     rmf_header_error: float = 0.15  # log-normal sigma of the error of the Rmf known to the model
     sxo_exp_range: tuple = (0.12, 0.30)  # per-well flushing exponent k in Sxo = Sw^k (unknown to model)
     frac_wet_wells: float = 0.25    # wells with no hydrocarbon column
+    frac_marginal_wells: float = 0.0  # non-commercial wells: residual hydrocarbon only (low contrast)
+    marginal_sw_floor: tuple = (0.60, 0.85)  # macro-pore Sw never drops below this in marginal wells
     noise: dict = None              # per-curve noise std
     p_missing: dict = None          # probability a well lacks the curve
     nphi_offset_std: float = 0.01   # per-well neutron nuisance (matrix convention / calibration)
@@ -112,6 +114,10 @@ def make_benchmark(cfg: SynthConfig | None = None) -> dict:
     sw_irr_mac = np.clip(0.10 + 0.04 / np.maximum(phi, 0.03), 0.1, 1.0)
     sw_mac = np.clip(sw_irr_mac + (1 - sw_irr_mac) * trans, 0.02, 1.0)
     sw_mac = np.where(wet[:, None], 1.0, sw_mac)
+    rng3 = np.random.default_rng(cfg.seed + 20_000)   # separate stream: earlier draws unchanged
+    marginal = (~wet) & (rng3.uniform(size=W) < cfg.frac_marginal_wells / max(1 - cfg.frac_wet_wells, 1e-9))
+    floor = rng3.uniform(*cfg.marginal_sw_floor, W)[:, None]
+    sw_mac = np.where(marginal[:, None], np.maximum(sw_mac, floor), sw_mac)
     k_w = rng.uniform(*cfg.sxo_exp_range, W)
     sxo_mac = sw_mac ** k_w[:, None]                              # flushing by mud filtrate
     rmf_w = cfg.rmf * np.exp(rng.normal(0, cfg.rmf_spread, W))
@@ -178,7 +184,7 @@ def make_benchmark(cfg: SynthConfig | None = None) -> dict:
                  v_dol=v_dol, sw_macro=sw_mac, sxo_macro=sxo_mac,
                  sw_total=fw.total_sw(T(sw_mac), fT).numpy(),
                  bvh=fw.bulk_volume_hydrocarbon(T(phi), T(sw_mac), fT).numpy(),
-                 wet_well=wet, contact_ft=contact[:, 0], nphi_offset=nphi_off[:, 0],
+                 wet_well=wet, marginal_well=marginal, contact_ft=contact[:, 0], nphi_offset=nphi_off[:, 0],
                  rhob_offset=rhob_off[:, 0], rw=rw_true, sxo_exp=k_w, rmf=rmf_w, gr_clean=gr_clean[:, 0],
                  gr_shale=gr_sh[:, 0])
     return dict(xy_km=xy, z_ft=z, rmf_obs=rmf_obs, obs=obs, mask=mask, truth=truth,
