@@ -23,3 +23,14 @@ identifiability:
   seeds: [0, 1, 2]
   steps: 6000
   steps_v2: 4000
+# Real-data blind-well runs (scripts/train_real.py, scripts/eval_real.py; rules D24b, D27, D28)
+real:
+  seeds: [0, 1, 2, 3, 4]        # ensemble members
+  steps_train: 3000
+  steps_test: 1500
+  n_fixed: 1.8                  # D23
+  rw_nominal: 0.05              # ohm.m, centre of a wide prior (ln sd below); not interpreted
+  rw_prior_log_sd: 0.5
+  hide: [LRXO, PE, DT]          # blind curve reconstruction on held-out wells
+  bootstrap: 2000
+  standin: {n_wells: 40, n_samples: 60, seed: 0}

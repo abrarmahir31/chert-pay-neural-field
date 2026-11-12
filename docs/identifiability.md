@@ -106,3 +106,38 @@ Neither n, nor f_micro, nor (under model-family uncertainty) m can be claimed as
 spatial field. What the label-free inversion does deliver robustly in these tests is a relative
 pay indicator. Caveat: the synthetic wet wells are fully water-bearing, which is an easier
 contrast than real dry holes.
+
+---
+
+# Benchmark v3: low-contrast dry wells, and does spatial sharing help?
+
+Source: `results/pay_indicator_benchmark/runs.csv`; `make pay-benchmark` (v2 truth, 200 wells,
+seeds 0, 1, 2; 10 % fully wet wells and 15 % "marginal" wells whose macro-pore water
+saturation never falls below 0.60 to 0.85, i.e. residual hydrocarbon only). Descriptive: no
+decision rule was attached to this benchmark. Means over 3 seeds.
+
+| Method | BVH r | AUC pay vs all dry | AUC pay vs marginal | AUC pay vs wet |
+|---|---|---|---|---|
+| Archie inversion, spatial field (primary entry) | 0.93 | 0.86 | 0.81 | 0.95 |
+| Archie inversion, well by well (no sharing) | 0.93 | 0.85 | 0.80 | 0.93 |
+| Archie inversion, one global m | 0.92 | 0.84 | 0.79 | 0.93 |
+| Dual-porosity inversion, spatial field (second entry) | 0.89 | 0.82 | 0.77 | 0.91 |
+| Dual-porosity inversion, well by well | 0.88 | 0.84 | 0.80 | 0.91 |
+| Dual-porosity inversion, global parameters | 0.85 | 0.82 | 0.79 | 0.88 |
+| **Fixed-parameter Archie, no inversion (m = n = 2)** | 0.87 | **0.88** | **0.84** | 0.94 |
+
+## Reading
+1. **The easy-contrast caveat was real.** With marginal wells the well-level AUC falls from
+   about 0.93 to 0.97 (pay vs fully wet) to 0.82 to 0.86 (pay vs all dry) and to 0.77 to 0.81
+   against marginal wells alone.
+2. **Spatial sharing barely helps.** Field, well-by-well and global-parameter versions differ
+   by 0.01 to 0.02 in AUC, which is inside the seed-to-seed range (for example 0.82 to 0.89 for
+   the Archie field).
+3. **The inversion does not beat the classical fixed-parameter Archie calculation at
+   classifying wells** in this benchmark (0.86 vs 0.88), although its sample-level BVH is
+   closer to the truth (r 0.93 vs 0.87). Better per-sample estimates did not translate into a
+   better well ranking.
+4. The dual-porosity entry is again no better than the Archie entry.
+
+This is a warning for the real-data rule D24b: on synthetic data the neural field has no
+classification advantage over the simplest baseline.
