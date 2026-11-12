@@ -37,6 +37,14 @@ class SynthConfig:
     nphi_offset_std: float = 0.01   # per-well neutron nuisance (matrix convention / calibration)
     rhob_offset_std: float = 0.01
     forward_resistivity: str = "dual_porosity"
+    # ---- benchmark v2 options (D24a). truth_family "v2" uses a DIFFERENT model family than
+    # the inversion: Waxman-Smits-type resistivity, non-linear neutron, Wyllie sonic.
+    truth_family: str = "v1"
+    ws_excess: float = 8.0          # S/m of excess conductivity per unit micro-porosity fraction
+    rw_log_sd: float = 0.0          # global Rw unknown: ln Rw_true ~ N(ln rw, sd)
+    rw_trend: float = 0.0           # smooth spatial trend of ln Rw (half-range)
+    env_bias: dict = None           # per-well biases: nphi_gain_sd, lrt_off_sd, lrxo_off_sd
+    washout_frac: float = 0.0       # fraction of samples with rugosity spikes on RHOB / NPHI
 
     def __post_init__(self):
         if self.noise is None:
@@ -44,6 +52,8 @@ class SynthConfig:
         if self.p_missing is None:
             # from results/audit/audit_summary.json: DT 124/625, PE 259/625, shallow 594/625
             self.p_missing = dict(DT=0.80, PE=0.59, LRXO=0.05)
+        if self.env_bias is None:
+            self.env_bias = dict(nphi_gain_sd=0.0, lrt_off_sd=0.0, lrxo_off_sd=0.0)
 
 
 def _smooth_field(rng, xy, mean, half_range, corr_km, n_modes=24):
@@ -66,6 +76,13 @@ def _ar1(rng, n_wells, n, rho, scale):
 
 def _sigmoid(x):
     return 1.0 / (1.0 + np.exp(-x))
+
+
+def _ws_log10_rt(phi, sw_total, f_micro, m, n, rw, excess):
+    """Waxman-Smits-type truth: Ct = phi^m Swt^n (1/Rw + B Qv / Swt), B Qv = excess * f_micro.
+    Total-porosity formulation: structurally different from the parallel dual-porosity model."""
+    ct = phi**m * sw_total**n * (1.0 / rw + excess * f_micro / sw_total)
+    return -np.log10(np.maximum(ct, 1e-9))
 
 
 def make_benchmark(cfg: SynthConfig | None = None) -> dict:
@@ -117,16 +134,43 @@ def make_benchmark(cfg: SynthConfig | None = None) -> dict:
         lrt = fw.log10_rt_archie(T(phi), T(sw_mac), mT, nT, cfg.rw)
         lrxo = fw.log10_rt_archie(T(phi), T(sxo_mac), mT, nT, T(rmf_w)[:, None])
 
+    rw_true = np.full(W, cfg.rw)
+    v2 = cfg.truth_family == "v2"
+    rng2 = np.random.default_rng(cfg.seed + 10_000)   # separate stream: v1 draws are unchanged
+    if cfg.rw_log_sd > 0 or cfg.rw_trend > 0:
+        rw_true = cfg.rw * np.exp(rng2.normal(0, cfg.rw_log_sd)
+                                  + _smooth_field(rng2, xy, 0.0, cfg.rw_trend, 25.0))
+    if v2:
+        swt = fw.total_sw(T(sw_mac), fT).numpy()
+        sxot = sxo_tot.numpy()
+        lrt = T(_ws_log10_rt(phi, swt, f_w[:, None], m_w[:, None], n_w[:, None],
+                             rw_true[:, None], cfg.ws_excess))
+        lrxo = T(_ws_log10_rt(phi, sxot, f_w[:, None], m_w[:, None], n_w[:, None],
+                              rmf_w[:, None], cfg.ws_excess))
+        nphi = nphi + T(0.04 * v_qtz * phi / 0.3)                 # non-linear matrix effect
+        dt = T(1.1 * (fw.sonic_wyllie(*args).numpy() - 50.0) + 50.0)  # Wyllie + compaction factor
+    elif cfg.rw_log_sd > 0 or cfg.rw_trend > 0:
+        lrt = lrt + T(np.log10(rw_true / cfg.rw))[:, None]
     clean = dict(RHOB=rhob, NPHI=nphi, GR=gr, LRT=lrt, LRXO=lrxo, DT=dt, PE=pe)
+    eb = cfg.env_bias
+    nphi_gain = 1.0 + rng2.normal(0, eb["nphi_gain_sd"], (W, 1))
+    lrt_off = rng2.normal(0, eb["lrt_off_sd"], (W, 1))
+    lrxo_off = rng2.normal(0, eb["lrxo_off_sd"], (W, 1))
+    wash = rng2.uniform(size=(W, N)) < cfg.washout_frac
+    wash_amp = rng2.uniform(0.05, 0.2, (W, N)) * wash
     nphi_off = rng.normal(0, cfg.nphi_offset_std, (W, 1))
     rhob_off = rng.normal(0, cfg.rhob_offset_std, (W, 1))
     obs, mask = {}, {}
     for k, v in clean.items():
         o = v.numpy() + rng.normal(0, cfg.noise[k], (W, N))
         if k == "NPHI":
-            o = o + nphi_off
+            o = o * nphi_gain + nphi_off + 0.5 * wash_amp
         if k == "RHOB":
-            o = o + rhob_off
+            o = o + rhob_off - wash_amp
+        if k == "LRT":
+            o = o + lrt_off
+        if k == "LRXO":
+            o = o + lrxo_off
         present = rng.uniform(size=W) >= cfg.p_missing.get(k, 0.0)
         mask[k] = np.repeat(present[:, None], N, axis=1)
         obs[k] = np.where(mask[k], o, np.nan)
@@ -135,7 +179,7 @@ def make_benchmark(cfg: SynthConfig | None = None) -> dict:
                  sw_total=fw.total_sw(T(sw_mac), fT).numpy(),
                  bvh=fw.bulk_volume_hydrocarbon(T(phi), T(sw_mac), fT).numpy(),
                  wet_well=wet, contact_ft=contact[:, 0], nphi_offset=nphi_off[:, 0],
-                 rhob_offset=rhob_off[:, 0], sxo_exp=k_w, rmf=rmf_w, gr_clean=gr_clean[:, 0],
+                 rhob_offset=rhob_off[:, 0], rw=rw_true, sxo_exp=k_w, rmf=rmf_w, gr_clean=gr_clean[:, 0],
                  gr_shale=gr_sh[:, 0])
     return dict(xy_km=xy, z_ft=z, rmf_obs=rmf_obs, obs=obs, mask=mask, truth=truth,
                 clean={k: v.numpy() for k, v in clean.items()}, config=asdict(cfg))

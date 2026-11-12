@@ -43,6 +43,9 @@ class InversionConfig:
                                                         log_rmf=0.15))
     k_prior_mean: float = 0.2
     resistivity: str = "dual_porosity"              # or "archie"
+    learn_rw: bool = False                          # estimate one global Rw (prior around cfg.rw)
+    rw_prior_log_sd: float = 0.3
+    device: str = "cpu"                             # "auto" = cuda if available
     seed: int = 0
 
 
@@ -116,6 +119,14 @@ class JointInversion(nn.Module):
         self.gr_slope_raw = nn.Parameter(torch.full((W, 1), math.log(250.0)))
         self.k_raw = nn.Parameter(torch.zeros(W, 1))
         self.log_rmf_corr = nn.Parameter(torch.zeros(W, 1))
+        self.log_rw_delta = nn.Parameter(torch.zeros(()), requires_grad=cfg.learn_rw)
+        dev = cfg.device
+        if dev == "auto":
+            dev = "cuda" if torch.cuda.is_available() else "cpu"
+        self.to(dev)
+
+    def rw(self):
+        return self.cfg.rw * torch.exp(self.log_rw_delta)
 
     # ------------------------------------------------------------------ state
     def properties(self):
@@ -146,11 +157,11 @@ class JointInversion(nn.Module):
                         + (0.0 if self.cfg.know_rmf_exactly else self.log_rmf_corr))
         if self.cfg.resistivity == "dual_porosity":
             lrt = fw.log10_rt_dual_porosity(p["phi"], p["sw_macro"], par["f_micro"], par["m"],
-                                            par["n"], self.cfg.rw, vsh=p["vsh"])
+                                            par["n"], self.rw(), vsh=p["vsh"])
             lrxo = fw.log10_rt_dual_porosity(p["phi"], sxo_mac, par["f_micro"], par["m"],
                                              par["n"], rmf, vsh=p["vsh"])
         else:
-            lrt = fw.log10_rt_archie(p["phi"], p["sw_macro"], par["m"], par["n"], self.cfg.rw)
+            lrt = fw.log10_rt_archie(p["phi"], p["sw_macro"], par["m"], par["n"], self.rw())
             lrxo = fw.log10_rt_archie(p["phi"], sxo_mac, par["m"], par["n"], rmf)
         pred = dict(
             RHOB=rhob + self.rhob_off,
@@ -172,12 +183,14 @@ class JointInversion(nn.Module):
         prior = prior + 0.5 * ((self.rhob_off / sd["rhob_off"]) ** 2).sum()
         prior = prior + 0.5 * ((self.log_rmf_corr / sd["log_rmf"]) ** 2).sum()
         prior = prior + 0.5 * (((self.flushing_exponent() - self.cfg.k_prior_mean) / sd["k"]) ** 2).sum()
+        prior = prior + 0.5 * (self.log_rw_delta / self.cfg.rw_prior_log_sd) ** 2
         n_obs = sum(int(getattr(self, f"mask_{c}").sum()) for c in self.curves)
         return (sum(terms.values()) + prior) / n_obs, {k: float(v.detach()) for k, v in terms.items()}
 
     def fit(self, log_every: int = 0):
         cfg = self.cfg
-        latent = [p for n, p in self.named_parameters() if not n.startswith("field.")]
+        latent = [p for n, p in self.named_parameters()
+                  if not n.startswith("field.") and p.requires_grad]
         opt = torch.optim.Adam([{"params": self.field.parameters(), "lr": cfg.lr_field},
                                 {"params": latent, "lr": cfg.lr_latent}])
         sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, cfg.steps)

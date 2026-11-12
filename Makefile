@@ -1,4 +1,4 @@
-.PHONY: install data audit test lint synthetic identifiability
+.PHONY: install data audit test lint synthetic identifiability identifiability-v2
 CONFIG ?= configs/cpu_small.yaml
 PY ?= python
 
@@ -24,3 +24,6 @@ synthetic:       ## synthetic benchmark with known truth (CONFIG=configs/scale_u
 
 identifiability: ## pre-registered identifiability study (DECISIONS.md D20)
 	$(PY) scripts/run_identifiability.py --config $(CONFIG)
+
+identifiability-v2: ## benchmark v2: different-family truth, 200 wells, unknown Rw (DECISIONS.md D24a)
+	$(PY) scripts/run_identifiability.py --suite v2 --config $(CONFIG)
