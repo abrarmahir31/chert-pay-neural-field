@@ -1,97 +1,115 @@
-# Lab machine runbook
+# Lab PC runbook: real-data run (rule D24b)
 
-Machine specs are not yet known, so nothing here assumes a GPU model, VRAM, RAM or admin
-rights. Everything runs without admin rights inside a Python virtual environment. Tested on
-CPU (Linux, Python 3.13, 4 cores, 15 GB RAM).
+Target machine: Windows, NVIDIA RTX 4060 Ti 16 GB (driver 610.88, CUDA 13.3), about 16 GB RAM,
+admin account, project on `E:`. **Nothing here has been tested on Windows or on a GPU**; the
+same scripts were run on Linux / CPU only. Each step says how to tell that it worked.
 
-## 1. Setup (once)
-```bash
-git clone https://github.com/abrarmahir31/chert-pay-neural-field
+Does it fit? Yes, with a wide margin. The data set is 625 wells x 201 samples; the model has
+about 1 million parameters. Expect well under 1 GB of VRAM and under 4 GB of RAM for the run
+itself. The audit step is the heaviest on RAM (it reads two KGS tables of 200 to 335 MB as
+text; about 6 to 8 GB peak): close other applications for that step.
+
+## 0. Which Windows?
+```powershell
+(Get-CimInstance Win32_OperatingSystem).Caption
 ```
-```bash
-cd chert-pay-neural-field
-```
-CPU build:
-```bash
-bash scripts/setup_machine.sh
-```
-CUDA build (pick the index that matches the driver, see pytorch.org "Get started"):
-```bash
-TORCH_INDEX=https://download.pytorch.org/whl/cu124 bash scripts/setup_machine.sh
-```
-The script creates `.venv`, installs pinned packages, prints whether CUDA is visible and runs
-the unit tests. On Windows use WSL2, or run the same `pip` commands in a PowerShell venv.
+The steps are identical for Windows 10 and 11.
 
-## 2. Data (once, about 1.6 GB, 15 to 25 minutes)
-```bash
-source .venv/bin/activate && make data && make audit
-```
-`make audit` must reproduce `results/audit/audit_summary.json` (625 usable wells).
-
-## 1b. Windows 10 native setup (NOT TESTED ON WINDOWS)
-
-Written for the candidate lab PC (Ryzen 7 5700X, 32 GB RAM, Windows 10 Pro 19045). GPU model,
-VRAM, free disk and admin rights are not yet known. Nothing below needs admin rights if Python
-and Git are installed "for the current user". Run in PowerShell.
-
-1. Install Git for Windows (git-scm.com) and Python 3.11 to 3.13 (python.org, tick "Add to PATH").
+## 1. Install (once, PowerShell)
+1. Git for Windows (git-scm.com) and Python 3.12 or 3.13, 64-bit (python.org, tick "Add
+   python.exe to PATH"). Check: `python --version` and `git --version` print versions.
 2. Clone and create the environment:
 ```powershell
-git clone https://github.com/abrarmahir31/chert-pay-neural-field; cd chert-pay-neural-field
+E:; git clone https://github.com/abrarmahir31/chert-pay-neural-field; cd chert-pay-neural-field
 ```
 ```powershell
-py -3 -m venv .venv; .venv\Scripts\Activate.ps1
+python -m venv .venv; .venv\Scripts\Activate.ps1
 ```
-   If activation is blocked: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
-3. PyTorch. With an NVIDIA GPU, check the driver with `nvidia-smi`, then pick the matching
-   CUDA wheel index from pytorch.org (example for CUDA 12.4):
+   If activation is refused: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, then retry.
+3. PyTorch with CUDA. The pinned version 2.15.0 has exactly one Windows CUDA build, `cu132`
+   (checked on the PyTorch wheel index on 15 Nov 2026); your driver reports CUDA 13.3, which
+   should be new enough:
 ```powershell
-pip install torch==2.15.0 --index-url https://download.pytorch.org/whl/cu124
+pip install torch==2.15.0 --index-url https://download.pytorch.org/whl/cu132
 ```
-   Without an NVIDIA GPU (or to test first): `pip install torch==2.15.0` (CPU). The code falls
-   back to CPU automatically (`device: auto`); 8 cores are enough for every run in this repo.
-4. Project and tests:
+4. Project, then unit tests (expect "34 passed"):
 ```powershell
 pip install -e ".[dev,data]"; python -m pytest -q
 ```
+
+## 2. GPU check and smoke test (about 5 minutes, touches no real logs)
 ```powershell
-python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+scripts\run_lab.bat smoke
 ```
-5. Data and audit (about 1.6 GB download; about 4 GB of free disk is enough):
+It prints the GPU name, the device actually used, seconds per step, peak GPU memory and an
+**estimated duration of the full run on this machine**, then runs the whole pipeline on a
+small synthetic stand-in. Success = `CHECK PASSED` and `SMOKE TEST PASSED`.
+
+- If it prints `NO CUDA DEVICE VISIBLE`: the run still works on the CPU (automatic fallback).
+  To fix the GPU instead, run `nvidia-smi` and `python -c "import torch; print(torch.__version__)"`;
+  the version must end in `+cu132`, not `+cpu`.
+- CPU-only fallback install: `pip install torch==2.15.0 --index-url https://download.pytorch.org/whl/cpu`.
+
+## 3. Data (once; about 1.6 GB download, 20 to 30 minutes)
 ```powershell
-python scripts/download_data.py; python scripts/audit_pass1.py; python scripts/audit_pass2.py; python scripts/audit_report.py
+python scripts\download_data.py
 ```
-`make` is not available on Windows by default: use the `python scripts/...` form of each
-command in the table below (the Makefile targets are one-line wrappers around them).
-
-## 3. One-command runners
-Every runner takes `--config` (`CONFIG=` with make). `configs/cpu_small.yaml` is the default;
-`configs/scale_up.yaml` is larger (more seeds and steps). `device: auto` uses CUDA when
-available and otherwise the CPU.
-
-| Experiment | make | python (all platforms) | Output |
-|---|---|---|---|
-| Unit tests | `make test` | `python -m pytest -q` | |
-| Identifiability v1 (D20) | `make identifiability` | `python scripts/run_identifiability.py --suite v1 --config configs/scale_up.yaml` | `results/identifiability/` |
-| Benchmark v2 (D24a) | `make identifiability-v2` | `python scripts/run_identifiability.py --suite v2 --config configs/scale_up.yaml` | `results/identifiability_v2/` |
-| Pay benchmark v3 | `make pay-benchmark` | `python scripts/run_identifiability.py --suite v3 --config configs/scale_up.yaml` | `results/pay_indicator_benchmark/` |
-| Real data, all entries + evaluation (D24b) | `make real` | `python scripts/run_real_all.py --config configs/scale_up.yaml` | `results/real/` |
-| Pipeline self-test on synthetic stand-in | `make real-standin` | `python scripts/run_real_all.py --standin` | `results/standin/` |
-
-CPU cost at the small configuration (4 cores): v2 about 25 min, v3 about 25 min. The real-data
-run has not been timed yet; it is the heavy job intended for this machine. Do NOT start it
-before the split file `results/splits/spatial_blocks_v1.csv` is in your clone (it is committed).
-
-## 4. Sending results back
-Only small files under `results/` and `figures/` (CSV, JSON, PDF). Never anything under `data/`
-(git ignores it) and no model checkpoints.
-```bash
-git checkout -b results/<machine>-<yyyymmdd>
+```powershell
+python scripts\audit_pass1.py; python scripts\audit_pass2.py --frozen-tops; python scripts\audit_report.py
 ```
-```bash
-git add results figures && git commit -m "Results from <machine>: <experiment>, config <name>"
+`--frozen-tops` reuses the Mississippian tops frozen in `results/splits/frozen_wells_v1.csv`,
+so a later change of the KGS tops database cannot move the analysis windows. The audit rewrites
+files under `results/audit/`; small differences from the committed versions are expected if KGS
+updated its tables. **Do not run `scripts/make_splits.py`** (the split is frozen; it refuses anyway).
+
+## 4. The registered run
+```powershell
+scripts\run_lab.bat full
 ```
-```bash
+Watch progress in a second window:
+```powershell
+Get-Content logs\real_run.log -Wait
+```
+The first line of each of the five parts reads `data fingerprint matches reference: True`.
+If it says `False`, let it finish anyway and tell me: it means the logs downloaded on the lab PC
+differ from the ones used to freeze the study (I will compare the fingerprints).
+The run does, in order: Archie field (primary entry), dual-porosity field (second entry),
+Archie and dual-porosity well by well, Archie with one global m, then the evaluation.
+
+Time: about 8 hours on 4 CPU cores (measured on Linux). On the 4060 Ti I expect roughly 1.5 to
+4 hours, but that is a guess; use the estimate printed by the smoke step. The run can be left
+overnight. If it is interrupted, start `scripts\run_lab.bat full` again (finished parts are
+recomputed; there is no resume).
+
+Do not change any setting between the smoke test and the full run, and do not re-run with
+different settings after seeing `evaluation.json`.
+
+## 5. Send the results back
+```powershell
+git checkout -b results/lab-4060ti-20261115
+```
+```powershell
+git add results/real results/audit; git commit -m "Real-data run D24b on lab PC, scale_up config"
+```
+```powershell
 git push -u origin HEAD
 ```
-Each results file records the script, config name and seeds that produced it.
+That branch then contains everything needed for the write-up:
+- `results/real/evaluation.json`: AUC and 95 % bootstrap interval per method, best baseline,
+  Bonferroni interval of each entry's difference, the D24b verdict, blind curve reconstruction;
+- `results/real/well_scores.csv`: per-well scores of every method and ensemble spread;
+- `results/real/pay_*.csv`, `recon_*.csv`, `pay_*.json`: raw per-seed outputs, device, versions, fingerprint;
+- `results/real/run_logs/`: `check_env.log` and `real_run.log`;
+- `results/audit/`: so that I can see whether the rebuilt inventory differs.
+No raw logs are included (git ignores `data/`). If the push fails, send me the `results/real`
+folder as a zip instead.
+
+## Other runners (all platforms)
+| Experiment | Command | Output |
+|---|---|---|
+| Identifiability v1 | `python scripts/run_identifiability.py --suite v1 --config configs/cpu_small.yaml` | `results/identifiability/` |
+| Benchmark v2 | `python scripts/run_identifiability.py --suite v2 --config configs/cpu_small.yaml` | `results/identifiability_v2/` |
+| Pay benchmark v3 | `python scripts/run_identifiability.py --suite v3 --config configs/cpu_small.yaml` | `results/pay_indicator_benchmark/` |
+| Environment check only | `python scripts/check_env.py --config configs/scale_up.yaml` | console |
+
+Linux or WSL: `bash scripts/setup_machine.sh`, then `make data && make audit && make real CONFIG=configs/scale_up.yaml`.

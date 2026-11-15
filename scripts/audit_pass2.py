@@ -207,6 +207,15 @@ def main() -> None:
         inv.loc[need, "miss_top_source"] = "idw_interp"
         inv.loc[need, "nearest_pick_km"] = dnn
 
+    # ---- optional: reuse the frozen tops of the study wells (results/splits/frozen_wells_v1.csv)
+    # so that a later KGS update of the tops database cannot move the analysis windows.
+    if "--frozen-tops" in sys.argv:
+        fz = pd.read_csv(ROOT / "results/splits/frozen_wells_v1.csv", dtype={"KID": str}).set_index("KID")
+        common = fz.index.intersection(inv.index)
+        for c in ("miss_top_md", "miss_base_md", "miss_top_source"):
+            inv.loc[common, c] = fz.loc[common, c]
+        print(f"frozen tops applied to {len(common)} of {len(fz)} study wells")
+
     # ---- LAS processing
     jobs = []
     for r in idx[idx.have].itertuples():

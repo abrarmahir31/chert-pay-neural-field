@@ -91,8 +91,7 @@ def main() -> None:
     else:
         from chertfield.data.real import load_real
         data = load_real()
-        sp = pd.read_csv(ROOT / "results/splits/spatial_blocks_v1.csv", dtype={"KID": str}).set_index("KID")
-        fold = sp.loc[data["kid"], "fold"].to_numpy()
+        fold = data["fold"]
     y = data["label"]
     table = pd.DataFrame({"kid": data["kid"], "fold": fold, "label": y}).set_index("kid")
     table["fixed_archie"], phi = classical(data, cfg["rw_nominal"], "archie")

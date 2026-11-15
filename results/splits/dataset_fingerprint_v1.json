@@ -1,0 +1,37 @@
+{
+ "created": "2026-11-15",
+ "source": "cloud session, data downloaded 2026-11-11",
+ "fingerprint": {
+  "n_wells": 625,
+  "curves": {
+   "RHOB": {
+    "n_valid": 123804,
+    "sum": 304604.4
+   },
+   "NPHI": {
+    "n_valid": 123574,
+    "sum": 19102.7
+   },
+   "GR": {
+    "n_valid": 123629,
+    "sum": 5041922.5
+   },
+   "LRT": {
+    "n_valid": 123615,
+    "sum": 103986.6
+   },
+   "LRXO": {
+    "n_valid": 117933,
+    "sum": 125033.6
+   },
+   "DT": {
+    "n_valid": 23803,
+    "sum": 1658244.9
+   },
+   "PE": {
+    "n_valid": 51078,
+    "sum": 144067.5
+   }
+  }
+ }
+}

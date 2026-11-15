@@ -1,5 +1,6 @@
-# Scale-up configuration for a GPU workstation. Sizes are placeholders to be set from the lab PC specs.
-# (GPU model, VRAM, RAM not yet known: nothing is assumed beyond "a CUDA GPU").
+# Scale-up configuration for the lab PC (RTX 4060 Ti 16 GB, about 16 GB RAM).
+# Same field architecture as cpu_small (the one tested in the benchmarks, D32);
+# only ensemble size and optimisation steps are larger.
 name: scale_up
 device: auto            # auto = cuda if available, else cpu
 seeds: [0, 1, 2, 3, 4]
@@ -10,9 +11,9 @@ synthetic:
 # Consumed by the Phase 3 training scripts (not implemented before Gate 2 approval):
 field:
   encoder: fourier      # fourier | hashgrid
-  n_frequencies: 10
-  hidden: 256
-  layers: 6
+  n_frequencies: 6
+  hidden: 128
+  layers: 4
 ensemble:
   members: 20
 train:
