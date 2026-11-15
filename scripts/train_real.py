@@ -76,9 +76,11 @@ def main() -> None:
     else:
         from chertfield.data.real import load_real
         data = load_real()
-        sp = pd.read_csv(ROOT / "results/splits/spatial_blocks_v1.csv", dtype={"KID": str}).set_index("KID")
-        fold = sp.loc[data["kid"], "fold"].to_numpy()
+        fold = data["fold"]
     cfg["_extent"] = data["extent_km"]
+    if not a.standin:
+        print("data fingerprint matches reference:", data.get("fingerprint_matches_reference"), flush=True)
+    n_jobs, done = len(r["seeds"]) * len(set(fold)), 0
     rows, recon, t0 = [], [], time.time()
     for seed in r["seeds"]:
         for k in sorted(set(fold)):
@@ -112,8 +114,11 @@ def main() -> None:
                 recon.append(dict(curve=h, fold=int(k), seed=seed, n=int(m.sum()),
                                   rmse=float(np.sqrt(np.mean(err**2))), bias=float(err.mean()),
                                   sd_obs=float(dte["obs"][h][m].std())))
+            done += 1
+            el = time.time() - t0
             print(f"seed {seed} fold {k}: {int(te.sum())} held-out wells, "
-                  f"chi2 LRT {chi2.get('LRT', float('nan')):.2f}, {time.time() - t0:.0f}s", flush=True)
+                  f"chi2 LRT {chi2.get('LRT', float('nan')):.2f}, {el:.0f}s elapsed, "
+                  f"about {el / done * (n_jobs - done) / 60:.0f} min left for this run", flush=True)
     out = ROOT / ("results/standin" if a.standin else "results/real")
     out.mkdir(parents=True, exist_ok=True)
     stem = f"pay_{a.entry}_{a.spatial}"
@@ -122,6 +127,9 @@ def main() -> None:
     meta = {"script": "scripts/train_real.py", "config": Path(a.config).name, "entry": a.entry,
             "spatial": a.spatial, "seeds": r["seeds"], "standin": a.standin,
             "n_wells": int(len(data["kid"])), "seconds": round(time.time() - t0),
+            "device": str(next(test.parameters()).device), "torch": torch.__version__,
+            "fingerprint": data.get("fingerprint"),
+            "fingerprint_matches_reference": data.get("fingerprint_matches_reference"),
             "settings": {k: v for k, v in r.items() if k != "standin"}}
     (out / f"{stem}.json").write_text(json.dumps(meta, indent=1))
 

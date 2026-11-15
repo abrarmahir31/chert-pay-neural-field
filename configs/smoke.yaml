@@ -1,0 +1,44 @@
+# Smoke-test configuration: tiny step counts, only to catch environment problems.
+# Results produced with this file are meaningless and must never be reported.
+name: smoke
+device: auto
+seeds:
+- 0
+- 1
+- 2
+synthetic:
+  n_wells: 60
+  n_samples: 200
+  seed: 0
+field:
+  encoder: fourier
+  n_frequencies: 6
+  hidden: 128
+  layers: 4
+ensemble:
+  members: 5
+train:
+  batch_size: 8192
+  steps: 4000
+  lr: 0.001
+identifiability:
+  seeds:
+  - 0
+  steps: 200
+  steps_v2: 200
+real:
+  seeds:
+  - 0
+  - 1
+  steps_train: 200
+  steps_test: 100
+  n_fixed: 1.8
+  rw_nominal: 0.05
+  rw_prior_log_sd: 0.5
+  hide:
+  - LRXO
+  bootstrap: 200
+  standin:
+    n_wells: 40
+    n_samples: 60
+    seed: 0

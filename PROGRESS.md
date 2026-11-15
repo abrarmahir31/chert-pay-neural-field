@@ -1,27 +1,22 @@
 # Progress (resume from here)
 
-## Status: benchmark v3 done; real-data run PREPARED, NOT STARTED. Waiting for the user's go-ahead (and choice of where to run it).
+## Status: real-data run (D24b) handed to the user's lab PC. Waiting for results branch `results/lab-4060ti-*`.
 
 ### Done
-- Framing A approved (D26); entries and window pre-registered (D27, D28); results D25, D29.
-- Benchmarks: `make identifiability`, `make identifiability-v2`, `make pay-benchmark`
-  (docs/identifiability.md has all three parts).
-- Spatial split frozen: results/splits/spatial_blocks_v1.csv (never regenerate).
-- Real-data pipeline: src/chertfield/data/real.py, scripts/train_real.py, scripts/eval_real.py,
-  scripts/run_real_all.py; self-test `make real-standin` (synthetic stand-in, no real data).
-- 34 unit tests; GPU handled by `device: auto` with CPU fallback (never exercised on a GPU).
-- Runbook incl. Windows 10 native steps (untested on Windows): docs/lab_gpu_workflow.md.
+- Benchmarks v1, v2, v3 (docs/identifiability.md); decisions D1 to D32.
+- Frozen: results/splits/frozen_wells_v1.csv (wells, xy, tops, folds, labels),
+  spatial_blocks_v1.csv, dataset_fingerprint_v1.json. Never regenerate.
+- Real pipeline: scripts/train_real.py, eval_real.py, run_real_all.py, check_env.py,
+  run_lab.bat; configs/smoke.yaml, scale_up.yaml. Runbook: docs/lab_gpu_workflow.md.
+- No real-data fit has been run in the cloud session.
 
 ### Exact next steps
-1. On go-ahead: `make real CONFIG=configs/cpu_small.yaml` (here) or scale_up on the lab PC.
-   It runs archie/field, dual/field, archie/per_well, dual/per_well, archie/constant, then
-   eval_real.py -> results/real/evaluation.json with the D24b verdict.
-2. If no entry beats the best baseline (Bonferroni CI): STOP and report (rule D24b).
-3. Then Phase 4 remainder: sensitivity to n (1.6 to 2.2), neutron matrix, environmental
-   offsets; School Trust 4-4 case study (data/raw/kgs/core/1006015457.html, parse first);
-   pay-indicator maps with ensemble + model-family + n uncertainty. Gate 3.
+1. When the results branch arrives: read results/real/evaluation.json. Check
+   `fingerprint_matches_reference` and `device` in results/real/pay_*.json.
+2. If `D24b_any_entry_beats_best_baseline` is false: STOP, report to the user, write nothing.
+3. Otherwise / after the user's framing decision: sensitivity runs (n 1.6 to 2.2, neutron
+   matrix, environmental offsets), School Trust 4-4 case study, pay maps, Gate 3.
 4. Wider full-text literature check (needs arxiv.org, essopenarchive.org, onepetro.org or PDFs).
-5. Candidate titles are in DECISIONS-independent note below.
 
 ### Candidate working titles (user to choose)
 1. "What can label-free physics-informed log inversion recover? Identifiability limits and a

@@ -1,6 +1,7 @@
 """Real-data set for the inversion: upper-Mississippian window on a fixed grid (D28)."""
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import numpy as np
@@ -23,11 +24,20 @@ def well_labels(inv: pd.DataFrame) -> pd.Series:
     return lab
 
 
+def fingerprint(data: dict) -> dict:
+    """Coarse, platform-independent summary used to confirm that two machines built the same
+    data set (valid-sample counts and rounded sums per curve)."""
+    return {"n_wells": int(len(data["kid"])),
+            "curves": {k: {"n_valid": int(data["mask"][k].sum()),
+                           "sum": round(float(np.nansum(data["obs"][k])), 1)} for k in data["obs"]}}
+
+
 def load_real(root: Path = ROOT) -> dict:
-    inv = pd.read_csv(root / "results/audit/well_inventory.csv", dtype={"KID": str}).set_index("KID")
-    inv = inv[inv.usable_min]
+    """Study data set. Wells, coordinates, folds and labels come from the FROZEN file
+    results/splits/frozen_wells_v1.csv; logs from data/interim/miss_logs.parquet."""
+    fz = pd.read_csv(root / "results/splits/frozen_wells_v1.csv", dtype={"KID": str}).set_index("KID")
     logs = pd.read_parquet(root / "data/interim/miss_logs.parquet")
-    logs = logs[logs.KID.isin(inv.index) & (logs.rel_top_ft >= 0) & (logs.rel_top_ft <= WINDOW_FT)]
+    logs = logs[logs.KID.isin(fz.index) & (logs.rel_top_ft >= 0) & (logs.rel_top_ft <= WINDOW_FT)]
     n = int(WINDOW_FT / STEP_FT) + 1
     kids = sorted(set(logs.KID))
     row = {k: i for i, k in enumerate(kids)}
@@ -41,15 +51,21 @@ def load_real(root: Path = ROOT) -> dict:
             v = np.log10(np.where(v > 0, v, np.nan))
         a[wi, si] = v
         obs[name], mask[name] = a, np.isfinite(a)
-    inv = inv.loc[kids]
+    inv = fz.loc[kids]
     files = pd.read_csv(root / "results/audit/las_files.csv", dtype={"file_id": str})
     idx = pd.read_csv(root / "data/raw/kgs/ks_las_files/ks_las_files.txt", dtype=str, encoding="latin-1")
     idx["file_id"] = idx.URL.str.extract(r"/(\d+)\.las", expand=False)
     files["KID"] = files.file_id.map(dict(zip(idx.file_id, idx.KGS_ID, strict=False)))
     rmf = files[files.rmf.between(0.01, 5.0)].groupby("KID").rmf.median().reindex(kids)
-    xy = np.c_[inv.x_km - inv.x_km.min(), inv.y_km - inv.y_km.min()]
-    return dict(kid=np.array(kids), xy_km=xy, obs=obs, mask=mask,
+    xy = np.c_[inv.x_km - fz.x_km.min(), inv.y_km - fz.y_km.min()]
+    data = dict(kid=np.array(kids), xy_km=xy, obs=obs, mask=mask,
                 rmf_obs=rmf.fillna(RMF_DEFAULT).to_numpy(),
                 log_rmf_prior_sd=np.where(rmf.notna(), RMF_SD_HEADER, RMF_SD_MISSING),
-                label=well_labels(inv).to_numpy(),
-                extent_km=(float(xy[:, 0].max()), float(xy[:, 1].max())))
+                label=inv.label.to_numpy(), fold=inv.fold.to_numpy(),
+                extent_km=(float(fz.x_km.max() - fz.x_km.min()), float(fz.y_km.max() - fz.y_km.min())))
+    data["fingerprint"] = fingerprint(data)
+    ref = root / "results/splits/dataset_fingerprint_v1.json"
+    if ref.exists():
+        reference = json.loads(ref.read_text())["fingerprint"]
+        data["fingerprint_matches_reference"] = reference == data["fingerprint"]
+    return data
