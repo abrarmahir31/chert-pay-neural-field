@@ -1,20 +1,22 @@
 # Progress (resume from here)
 
-## Status: D24b FAILED on real data (D33). STOPPED. Results branch received, verified and merged (results/real/). Waiting for the user's reframing decision. Nothing has been written for the paper.
+## Status: DECISION GATE 3. Real-data test failed (D33, D34); reframing approved (D35); exploratory diagnostics done (D36). Waiting for Gate 3 approval before any manuscript text.
 
-### What happened
-- Lab-PC run finished (about 20 h wall clock incl. restart; fingerprint matched; GPU used).
-- Neither neural-field entry beats the best baseline; both are significantly worse (see D33).
-- Also visible: the spatial field is worse than the same inversion well by well (0.643 vs 0.726)
-  and than fixed-parameter Archie (0.686). Label-free inversions all trail the supervised models.
+### Key documents
+- docs/identifiability.md (benchmarks v1, v2, v3), docs/real_data_results.md (D24b + exploratory),
+  docs/literature_gap.md, docs/data_audit.md, docs/forward_models.md, DECISIONS.md (D1 to D36).
 
-### Exact next steps
-1. DONE: results verified against results/real/evaluation.json and merged into main (D33, D34).
-2. Do NOT tune or re-run anything on real logs.
-3. After the user's decision (expected: identifiability and negative-results paper):
-   diagnostics that do not change the registered test (why the field hurts: compare per-fold
-   AUC, ensemble spread, blind curve reconstruction), n sensitivity, School Trust 4-4 case
-   study, figures, manuscript. Gate 3 summary first.
+### Exact next steps after Gate 3 approval
+1. Still-open Phase 4 items that need NO refit on real logs: School Trust 4-4 core case study
+   is NOT possible without per-sample outputs (only well-level scores were saved): either drop
+   it or ask the user before any new real-data fit. n sensitivity and neutron-matrix /
+   environmental sensitivity: done on synthetic only (v2 rows); say so.
+2. Phase 5: figures from results/ only (load the dataviz skill first): identifiability panels
+   (v1 vs v2 m recovery, null controls), v3 AUC bars, real-data AUC forest plot with CIs,
+   per-fold AUC, map of wells / folds / labels. Manuscript in paper/ (Computers & Geosciences
+   template), cover letter, reviewers, AI-use statement. Cite only verified references.
+3. Phase 6: README commands, results manifest, model card, CITATION.cff, LICENSE (ask user),
+   clean-clone reproduction, tagged release.
 4. Wider full-text literature check (needs arxiv.org, essopenarchive.org, onepetro.org or PDFs).
 
 ### Candidate working titles (user to choose)
