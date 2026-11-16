@@ -1,23 +1,22 @@
 # Progress (resume from here)
 
-## Status: Phase 5 started. Draft figures 1 to 5 made and shown to the user. WAITING for figure approval before writing manuscript text.
+## Status: Phase 5 complete (draft). STOPPED at the Phase 6 gate, waiting for the user's approval to prepare the release.
 
 ### Done in Phase 5
-- scripts/make_figures.py -> figures/fig1..fig5 (.pdf vector + .png preview), results-only inputs.
-- docs/traceability.md (figure and number -> source file). LICENSE (MIT), LICENSE-docs.md (CC BY 4.0).
+- Figures 1 to 5 (scripts/make_figures.py), approved by the user (D38).
+- paper/main.tex (about 3,700 words, abstract 248 words), highlights, cover letter, suggested
+  reviewers, TODO_before_submission.md, references.bib (25 verified entries).
+- docs/traceability.md covers every figure and every number in the text.
+- NOT done: compiling main.tex (no LaTeX here; user must compile locally or on Overleaf).
 
-### Exact next steps
-1. Apply the user's figure comments; re-run `python scripts/make_figures.py`.
-2. Manuscript in paper/ (Computers & Geosciences, elsarticle class): abstract, highlights,
-   introduction + gap, geological setting, data, method, pre-registration, results
-   (confirmatory, then clearly separated exploratory), discussion + limitations (D37 list,
-   core comparison not performed, no absolute Sw / Rw, tool-physics and environmental
-   assumptions, data vintage, literature read as abstracts only), conclusions, data/code
-   availability, AI-use statement. Cite only verified entries of paper/references.bib.
-   Placeholders [AUTHOR NAMES], [AFFILIATIONS]. Cover letter, suggested reviewers.
-3. Extend docs/traceability.md with every number used in the text.
-4. STOP at the Phase 6 gate (README commands, manifest, model card, CITATION.cff, clean-clone
-   reproduction, tagged release) and wait for approval.
+### Exact next steps (Phase 6, only after approval)
+1. Apply the user's comments on the manuscript; fix any LaTeX compile errors they report.
+2. README: exact commands for every figure and table; results manifest (file, script, config,
+   seed); model card; CITATION.cff; check LICENSE placeholders.
+3. Clean-clone reproduction: fresh clone -> install -> tests -> make_figures (results-only);
+   document what needs the data download and the lab-PC run (about 12 h).
+4. Tag a release (ask the user for the version name) and add the tag / archive DOI to the
+   code-availability section.
 5. Wider full-text literature check (needs arxiv.org, essopenarchive.org, onepetro.org or PDFs).
 
 ### Candidate working titles (user to choose)

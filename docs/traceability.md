@@ -40,4 +40,26 @@ TrueType fonts plus 600 dpi PNG. Figure titles are left to the captions.
 | EXPLORATORY: ensemble member AUC 0.642 to 0.645 | | `results/real/diagnostics_exploratory.json` (`auc_single_ensemble_member`) |
 | Run provenance (device, versions, fingerprint) | | `results/real/pay_*.json`, `results/real/run_logs/` |
 
-To be extended when the manuscript text is written (every new number gets a row).
+## Additional numbers used in the manuscript text (`paper/main.tex`)
+| Number | Value | Source |
+|---|---|---|
+| v1 error ratio for m | 0.47 / 0.57 / 0.41 | `results/identifiability/runs.csv` (`base`, `m_rmse_over_sd`) |
+| v2 centred error ratio for m | 1.05 / 1.48 / 1.30 | `results/identifiability_v2/runs.csv` (`v2_base`, `m_crmse_over_sd`) |
+| v2 sample-level pay-indicator correlation | 0.87 to 0.93 | `results/identifiability_v2/runs.csv` (`bvh_r`, experiment means) |
+| v3 Archie field AUC vs wet / vs all dry | 0.95 / 0.86 | `results/pay_indicator_benchmark/runs.csv` (`auc_pay_vs_wet`, `auc_pay_vs_dry`) |
+| v3 field vs well-by-well vs global difference | 0.01 to 0.02 | same (`v3_archie_field`, `v3_archie_perwell`, `v3_archie_const`) |
+| Benchmark sizes, noise, biases, 10 % wet and 15 % marginal wells | | `scripts/run_identifiability.py` (`V2_SYN`, `V3_SYN`), `src/chertfield/synthetic/benchmark.py` |
+| Field architecture (6 octaves, 4 x 128), ensemble of 10 | | `configs/scale_up.yaml`, `results/real/pay_*.json` |
+| Bootstrap resamples; Bonferroni level | 2,000; 0.025 per entry | `results/real/evaluation.json` (`bootstrap`, `alpha_per_entry`) |
+| Fixed n | 1.8 | `configs/scale_up.yaml` (`real.n_fixed`), DECISIONS.md D23 |
+| Blind reconstruction by curve: sonic 0.81 to 1.10, PE 1.33 to 1.45, shallow resistivity 1.9 to 3.6, bias 0.5 to 1.1 | | `results/real/evaluation.json` (`blind_curve_reconstruction_mean`) |
+| EXPLORATORY: fold range fixed Archie 0.47 to 0.93, supervised 0.63 to 0.80 | | `results/real/diagnostics_exploratory.json` (`auc_per_fold`) |
+| Run time of the registered run | about 12 h (41,744 s) | `results/real/pay_*.json` (`seconds`, summed) |
+| Usable wells: neutron matrix assumed | 263 | `results/audit/audit_summary.json` (`usable_nphi_source_counts`) |
+| Median spud year of usable wells | 2012 | `results/audit/audit_summary.json` (`usable_spud_year_quantiles`) |
+| Dry holes per fold | 9 or 10 | `results/splits/spatial_blocks_v1.json` (`per_fold`) |
+| Glick field m 2.36, n about 1.8 | | NOT from this repository: quoted from the KGS report (web pages), AUTHOR CHECK |
+| Abstract and conclusions | repeat numbers listed above | |
+
+Checked on 2026-11-16: every citation key in `main.tex` exists in `references.bib` (22 cited),
+all figure files exist, labels and references match. The manuscript has NOT been compiled.
