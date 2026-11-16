@@ -82,6 +82,12 @@ hundreds of wells and estimated them without core labels. That was the method we
 build.
 
 This paper reports what happened when that method was tested rather than only demonstrated.
+Computationally, the new element is a test protocol for label-free physics-informed inversion,
+implemented as open software: a benchmark generator whose truth comes from a different model
+family than the inversion, null controls for every interpreted parameter, a frozen spatially
+blocked evaluation, and decision rules committed before the experiments. Geoscientifically, the
+result is a statement about what standard log suites can and cannot constrain in
+low-resistivity chert pay, measured on 625 wells.
 A label-free inversion has as many free quantities per depth sample as it has measurements, so
 it can reproduce the logs almost perfectly whatever the parameters are. Whether the parameters
 mean anything is a question of identifiability, and a synthetic test answers it only if the
@@ -115,20 +121,20 @@ merges curves into one resistivity and drops matrix and caliper information, so 
 the original files. Of 1,054 Barber County LAS files in the survey index, 1,053 could be
 downloaded and 1,050 parsed; they belong to 765 wells. Curve mnemonics were mapped to canonical
 curves with a table built from the observed catalogue, units were harmonised, and files of the
-same well were merged on a 0.5~ft grid.
+same well were merged on a 0.152~m (0.5~ft) grid.
 
 The top of the Mississippian was taken from survey formation tops (615 wells) or, for 150 wells
 without a pick, interpolated from the subsea tops of neighbouring wells by inverse-distance
-weighting (leave-one-out mean absolute error 21~ft). A well is \emph{usable} if it has at least
-20~ft of co-located gamma ray, bulk density, neutron porosity and deep resistivity inside the
+weighting (leave-one-out mean absolute error 6.4~m, 21~ft). A well is \emph{usable} if it has at least
+6.1~m (20~ft) of co-located gamma ray, bulk density, neutron porosity and deep resistivity inside the
 Mississippian: 625 wells. Of these, 594 also have a shallow or medium resistivity, 259 a
 photoelectric curve and 124 a sonic log; the latter two enter only as optional terms. Neutron
 curves whose matrix is not stated were assumed to be in limestone units, because in 135 of the
 136 wells that carry both a labelled and an unlabelled curve the two are identical. The analysis
-window is the upper 100~ft of the Mississippian.
+window is the upper 30.5~m (100~ft) of the Mississippian.
 
 Descriptively, and only as motivation, wells recorded as Mississippian producers have a lower
-median deep resistivity in the top 50~ft than dry holes (6.0 versus 9.8~ohm\,m; Mann--Whitney
+median deep resistivity in the top 15.2~m (50~ft) than dry holes (6.0 versus 9.8~ohm\,m; Mann--Whitney
 $p = 2.6\times10^{-6}$).
 
 \subsection{Labels and spatial blocks}
@@ -144,7 +150,7 @@ well coordinates and the tops were frozen in a file before training.
 \centering
 \includegraphics[width=0.6\textwidth]{fig1_wells_map.pdf}
 \caption{The 625 study wells in local coordinates, with production labels and the 8~km blocks
-used for spatially blocked cross-validation.}
+used for spatially blocked cross-validation. Plot produced by AI-assisted plotting code directly from the result files.}
 \label{fig:map}
 \end{figure}
 
@@ -251,7 +257,7 @@ root-mean-square error of about 0.2 and the estimated $R_w$ was biased low (0.02
 well-level parameters, one marker per benchmark seed; colour and shape give the verdict of the
 pre-registered rule for the parameter, which also includes an error criterion (one
 micro-porosity seed exceeds 0.70 but fails on error). (b) Null controls: spread of the recovered
-parameter when the true parameter is constant, against the pre-registered limit.}
+parameter when the true parameter is constant, against the pre-registered limit. Plot produced by AI-assisted plotting code directly from the result files.}
 \label{fig:ident}
 \end{figure}
 
@@ -270,7 +276,7 @@ inversion; its advantage in v1 was part of the same inverse crime.
 \includegraphics[width=\textwidth]{fig3_synthetic_pay_indicator.pdf}
 \caption{Well-level AUC of the pay indicator on synthetic benchmark v3, one marker per seed:
 (a) wells with a hydrocarbon column against fully water-bearing wells; (b) against all dry
-wells, including marginal wells with residual hydrocarbon.}
+wells, including marginal wells with residual hydrocarbon. Plot produced by AI-assisted plotting code directly from the result files.}
 \label{fig:synpay}
 \end{figure}
 
@@ -315,7 +321,7 @@ Archie inversion, one global $m$ & 0.629 & 0.547--0.706 \\
 \includegraphics[width=0.85\textwidth]{fig4_real_data_auc.pdf}
 \caption{Pre-registered real-data test (378 producers, 47 dry holes): AUC on held-out spatial
 blocks with 95\% bootstrap intervals. The supervised baselines use production labels of the
-training blocks; all other methods use no labels.}
+training blocks; all other methods use no labels. Plot produced by AI-assisted plotting code directly from the result files.}
 \label{fig:real}
 \end{figure}
 
@@ -341,7 +347,7 @@ field lay between 0.642 and 0.645; different initialisations converge to the sam
 \includegraphics[width=\textwidth]{fig5_exploratory.pdf}
 \caption{Exploratory, post hoc observations (not part of the pre-registered test). (a) AUC
 within each of the five held-out folds. (b) AUC of single descriptive log statistics over all
-labelled wells, compared with two inversions.}
+labelled wells, compared with two inversions. Plot produced by AI-assisted plotting code directly from the result files.}
 \label{fig:expl}
 \end{figure}
 
@@ -427,7 +433,7 @@ source of this material is the Kansas Geological Survey website at
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
 During the preparation of this work the author used Claude (Anthropic), an AI system,
 through the Claude Code agent, to write and run the analysis code, to search and verify the
-literature, to draft the figures and to draft the text of this manuscript, under the author's
+literature, to write the plotting code that draws every figure directly from the saved result files, and to draft the text of this manuscript, under the author's
 direction and with decision points approved by the author. The complete record of these
 decisions is in the repository (\texttt{DECISIONS.md}). After using this tool, the author
 reviewed and edited the content as needed and takes full responsibility for the content of the
