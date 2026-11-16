@@ -1,0 +1,207 @@
+{
+ "script": "scripts/eval_real.py",
+ "seed": 20261112,
+ "bootstrap": 2000,
+ "n_producers": 378,
+ "n_dry": 47,
+ "inputs": {
+  "inversion_archie_constant": "pay_archie_constant.csv",
+  "archie_field": "pay_archie_field.csv",
+  "inversion_archie_per_well": "pay_archie_per_well.csv",
+  "dual_field": "pay_dual_field.csv",
+  "inversion_dual_per_well": "pay_dual_per_well.csv"
+ },
+ "auc": {
+  "fixed_archie": {
+   "auc": 0.6858043453788135,
+   "ci95": [
+    0.597467071935157,
+    0.7665822357311719
+   ]
+  },
+  "fixed_simandoux": {
+   "auc": 0.6844534504108972,
+   "ci95": [
+    0.5966424631318248,
+    0.7634906563098053
+   ]
+  },
+  "supervised_gbm": {
+   "auc": 0.7799166948103119,
+   "ci95": [
+    0.7099952155803221,
+    0.8472461443206123
+   ]
+  },
+  "supervised_mlp": {
+   "auc": 0.7638466734211415,
+   "ci95": [
+    0.6882633963750985,
+    0.8378377237419791
+   ]
+  },
+  "inversion_archie_constant": {
+   "auc": 0.6288416075650118,
+   "ci95": [
+    0.5470533603512328,
+    0.7064251941911515
+   ]
+  },
+  "archie_field": {
+   "auc": 0.6434200157604413,
+   "ci95": [
+    0.5632640999662276,
+    0.7195274681976809
+   ]
+  },
+  "inversion_archie_per_well": {
+   "auc": 0.726218619835641,
+   "ci95": [
+    0.643298998086232,
+    0.8006318248339526
+   ]
+  },
+  "dual_field": {
+   "auc": 0.5728357536868175,
+   "ci95": [
+    0.4859746144320612,
+    0.6580617471574918
+   ]
+  },
+  "inversion_dual_per_well": {
+   "auc": 0.6602499155690646,
+   "ci95": [
+    0.572495215580322,
+    0.7449074074074074
+   ]
+  }
+ },
+ "best_baseline": "supervised_gbm",
+ "alpha_per_entry": 0.025,
+ "paired_difference_vs_best_baseline": {
+  "archie_field": {
+   "difference": -0.13649667904987062,
+   "ci_bonferroni": [
+    -0.22824707306090283,
+    -0.041820049532815505
+   ],
+   "beats_best_baseline": false
+  },
+  "dual_field": {
+   "difference": -0.2070809411234944,
+   "ci_bonferroni": [
+    -0.3116775019700552,
+    -0.09962287515478993
+   ],
+   "beats_best_baseline": false
+  }
+ },
+ "D24b_any_entry_beats_best_baseline": false,
+ "blind_curve_reconstruction_mean": [
+  {
+   "run": "archie_constant",
+   "curve": "DT",
+   "rmse": 10.5585,
+   "rmse_over_sd": 0.9955,
+   "bias": -0.1871
+  },
+  {
+   "run": "archie_constant",
+   "curve": "LRXO",
+   "rmse": 1.2048,
+   "rmse_over_sd": 3.6076,
+   "bias": 1.1275
+  },
+  {
+   "run": "archie_constant",
+   "curve": "PE",
+   "rmse": 1.2443,
+   "rmse_over_sd": 1.3975,
+   "bias": 0.1956
+  },
+  {
+   "run": "archie_field",
+   "curve": "DT",
+   "rmse": 10.0426,
+   "rmse_over_sd": 0.9436,
+   "bias": -1.1827
+  },
+  {
+   "run": "archie_field",
+   "curve": "LRXO",
+   "rmse": 0.9027,
+   "rmse_over_sd": 2.7036,
+   "bias": 0.8163
+  },
+  {
+   "run": "archie_field",
+   "curve": "PE",
+   "rmse": 1.2541,
+   "rmse_over_sd": 1.4082,
+   "bias": 0.2019
+  },
+  {
+   "run": "archie_per_well",
+   "curve": "DT",
+   "rmse": 11.6394,
+   "rmse_over_sd": 1.1014,
+   "bias": 4.2696
+  },
+  {
+   "run": "archie_per_well",
+   "curve": "LRXO",
+   "rmse": 1.0434,
+   "rmse_over_sd": 3.0992,
+   "bias": 0.9858
+  },
+  {
+   "run": "archie_per_well",
+   "curve": "PE",
+   "rmse": 1.1971,
+   "rmse_over_sd": 1.3486,
+   "bias": 0.1401
+  },
+  {
+   "run": "dual_field",
+   "curve": "DT",
+   "rmse": 8.5995,
+   "rmse_over_sd": 0.8057,
+   "bias": -3.7938
+  },
+  {
+   "run": "dual_field",
+   "curve": "LRXO",
+   "rmse": 0.6328,
+   "rmse_over_sd": 1.903,
+   "bias": 0.5091
+  },
+  {
+   "run": "dual_field",
+   "curve": "PE",
+   "rmse": 1.283,
+   "rmse_over_sd": 1.4451,
+   "bias": 0.2026
+  },
+  {
+   "run": "dual_per_well",
+   "curve": "DT",
+   "rmse": 9.8852,
+   "rmse_over_sd": 0.9353,
+   "bias": 3.5801
+  },
+  {
+   "run": "dual_per_well",
+   "curve": "LRXO",
+   "rmse": 0.6436,
+   "rmse_over_sd": 1.9336,
+   "bias": 0.5712
+  },
+  {
+   "run": "dual_per_well",
+   "curve": "PE",
+   "rmse": 1.1799,
+   "rmse_over_sd": 1.3251,
+   "bias": 0.1465
+  }
+ ]
+}
