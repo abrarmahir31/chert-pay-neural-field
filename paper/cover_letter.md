@@ -34,5 +34,5 @@ it. Generative AI was used extensively in this work; its use is declared in the 
 the authors take full responsibility for the content.
 
 Sincerely,
-[AUTHOR NAMES]
+Abrar Mahir
 [AFFILIATIONS]
