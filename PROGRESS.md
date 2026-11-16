@@ -1,6 +1,6 @@
 # Progress (resume from here)
 
-## Status: D24b FAILED on real data (D33). STOPPED. Waiting for (1) the results branch, (2) the user's reframing decision. Nothing has been written for the paper.
+## Status: D24b FAILED on real data (D33). STOPPED. Results branch received, verified and merged (results/real/). Waiting for the user's reframing decision. Nothing has been written for the paper.
 
 ### What happened
 - Lab-PC run finished (about 20 h wall clock incl. restart; fingerprint matched; GPU used).
@@ -9,10 +9,7 @@
   and than fixed-parameter Archie (0.686). Label-free inversions all trail the supervised models.
 
 ### Exact next steps
-1. When branch `results/lab-4060ti-*` is pushed: `git fetch origin <branch>`; verify D33 numbers
-   against results/real/evaluation.json (AUC, ci95, paired differences, recon table); check
-   `device` and `fingerprint_matches_reference` in results/real/pay_*.json; merge the results
-   files into main; correct D33 if any number differs.
+1. DONE: results verified against results/real/evaluation.json and merged into main (D33, D34).
 2. Do NOT tune or re-run anything on real logs.
 3. After the user's decision (expected: identifiability and negative-results paper):
    diagnostics that do not change the registered test (why the field hurts: compare per-fold

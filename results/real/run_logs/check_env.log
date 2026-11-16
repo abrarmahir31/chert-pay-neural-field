@@ -1,0 +1,8 @@
+python 3.12.16 | Windows-10-10.0.19045-SP0
+torch 2.15.0+cu132 | cuda available: True
+gpu: NVIDIA GeForce RTX 4060 Ti | 16.0 GiB
+device used: cuda:0 | seconds per step: archie 0.0116, dual-porosity 0.0142
+peak GPU memory in this test: 49 MiB
+estimated time for the full real-data run with scale_up.yaml: about 6.6 h
+for reference, CPU seconds per step (archie): 0.0141
+CHECK PASSED
