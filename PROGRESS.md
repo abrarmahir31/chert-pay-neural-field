@@ -1,23 +1,24 @@
 # Progress (resume from here)
 
-## Status: DECISION GATE 3. Real-data test failed (D33, D34); reframing approved (D35); exploratory diagnostics done (D36). Waiting for Gate 3 approval before any manuscript text.
+## Status: Phase 5 started. Draft figures 1 to 5 made and shown to the user. WAITING for figure approval before writing manuscript text.
 
-### Key documents
-- docs/identifiability.md (benchmarks v1, v2, v3), docs/real_data_results.md (D24b + exploratory),
-  docs/literature_gap.md, docs/data_audit.md, docs/forward_models.md, DECISIONS.md (D1 to D36).
+### Done in Phase 5
+- scripts/make_figures.py -> figures/fig1..fig5 (.pdf vector + .png preview), results-only inputs.
+- docs/traceability.md (figure and number -> source file). LICENSE (MIT), LICENSE-docs.md (CC BY 4.0).
 
-### Exact next steps after Gate 3 approval
-1. Still-open Phase 4 items that need NO refit on real logs: School Trust 4-4 core case study
-   is NOT possible without per-sample outputs (only well-level scores were saved): either drop
-   it or ask the user before any new real-data fit. n sensitivity and neutron-matrix /
-   environmental sensitivity: done on synthetic only (v2 rows); say so.
-2. Phase 5: figures from results/ only (load the dataviz skill first): identifiability panels
-   (v1 vs v2 m recovery, null controls), v3 AUC bars, real-data AUC forest plot with CIs,
-   per-fold AUC, map of wells / folds / labels. Manuscript in paper/ (Computers & Geosciences
-   template), cover letter, reviewers, AI-use statement. Cite only verified references.
-3. Phase 6: README commands, results manifest, model card, CITATION.cff, LICENSE (ask user),
-   clean-clone reproduction, tagged release.
-4. Wider full-text literature check (needs arxiv.org, essopenarchive.org, onepetro.org or PDFs).
+### Exact next steps
+1. Apply the user's figure comments; re-run `python scripts/make_figures.py`.
+2. Manuscript in paper/ (Computers & Geosciences, elsarticle class): abstract, highlights,
+   introduction + gap, geological setting, data, method, pre-registration, results
+   (confirmatory, then clearly separated exploratory), discussion + limitations (D37 list,
+   core comparison not performed, no absolute Sw / Rw, tool-physics and environmental
+   assumptions, data vintage, literature read as abstracts only), conclusions, data/code
+   availability, AI-use statement. Cite only verified entries of paper/references.bib.
+   Placeholders [AUTHOR NAMES], [AFFILIATIONS]. Cover letter, suggested reviewers.
+3. Extend docs/traceability.md with every number used in the text.
+4. STOP at the Phase 6 gate (README commands, manifest, model card, CITATION.cff, clean-clone
+   reproduction, tagged release) and wait for approval.
+5. Wider full-text literature check (needs arxiv.org, essopenarchive.org, onepetro.org or PDFs).
 
 ### Candidate working titles (user to choose)
 1. "What can label-free physics-informed log inversion recover? Identifiability limits and a
