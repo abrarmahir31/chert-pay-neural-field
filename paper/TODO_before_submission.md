@@ -19,3 +19,6 @@
 9. Guide for authors: could not be fetched automatically (ScienceDirect blocks automated access).
    Provide the page as PDF or text so the manuscript can be checked against it line by line.
    Known from search snippets: code must be public at submission.
+10. Create the release on GitHub: Releases > Draft a new release > tag `v1.0.0`, target `main`.
+    The manuscript's code-availability section cites this release.
+11. Upload `figures/graphical_abstract.pdf` as the graphical abstract (optional).

@@ -1,6 +1,6 @@
 # Progress (resume from here)
 
-## Status: Phase 6 complete. Release v1.0.0 tagged. All six phases done; remaining items are the author's (paper/TODO_before_submission.md).
+## Status: Phase 6 complete except the release tag, which the author must create on GitHub (v1.0.0 on main; tag push is not possible from the cloud session). All six phases done; remaining items are the author's (paper/TODO_before_submission.md).
 
 ### State of the deliverables
 - Manuscript: paper/main.tex (compiles on MiKTeX; conformed to the journal guide, see
