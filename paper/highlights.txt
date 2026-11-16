@@ -1,5 +1,3 @@
-Highlights (Computers & Geosciences: 3 to 5 bullets, at most 85 characters each)
-
 - Label-free physics-informed log inversion tested on 625 public wells of chert pay
 - Saturation exponent and micro-porosity are not identifiable from standard logs
 - Cementation-exponent recovery vanished under a change of model: an inverse crime
