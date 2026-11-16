@@ -4,8 +4,8 @@
 entries only), `highlights.txt`, `cover_letter.md`, `suggested_reviewers.md`,
 `TODO_before_submission.md`.
 
-Status: draft, NOT yet compiled (no LaTeX on the machine where it was written). A static check
-confirmed that all citation keys, labels and figure files resolve.
+Status: draft. Compiles with MiKTeX 25.12 / pdfLaTeX on the author's laptop (16 pages,
+16 Nov 2026). Run pdflatex until the "Rerun to get cross-references right" warning disappears.
 
 Compile from this folder (TeX Live or MiKTeX with the `elsarticle` class; or upload `paper/` and
 `figures/` to Overleaf and set the figure path):
