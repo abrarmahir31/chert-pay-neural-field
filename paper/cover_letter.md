@@ -29,10 +29,11 @@ computational: a reproducible way of testing what label-free geoscientific inver
 recover, with open code. Negative results of this kind are rarely published, which biases the
 literature towards demonstrations that have not been stress-tested.
 
-The manuscript is original, is not under consideration elsewhere, and all authors have approved
+The manuscript is original, is not under consideration elsewhere, and the author has approved
 it. Generative AI was used extensively in this work; its use is declared in the manuscript and
-the authors take full responsibility for the content.
+the author takes full responsibility for the content.
 
 Sincerely,
 Abrar Mahir
-[AFFILIATIONS]
+Department of Petroleum and Mining Engineering, Shahjalal University of Science and Technology, Sylhet, Bangladesh
+abrar31@student.sust.edu | ORCID 0009-0003-0658-0667
