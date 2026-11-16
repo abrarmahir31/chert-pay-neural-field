@@ -1,23 +1,22 @@
 # Progress (resume from here)
 
-## Status: Phase 5 complete (draft). STOPPED at the Phase 6 gate, waiting for the user's approval to prepare the release.
+## Status: Phase 6 complete. Release v1.0.0 tagged. All six phases done; remaining items are the author's (paper/TODO_before_submission.md).
 
-### Done in Phase 5
-- Figures 1 to 5 (scripts/make_figures.py), approved by the user (D38).
-- paper/main.tex (about 3,700 words, abstract 248 words), highlights, cover letter, suggested
-  reviewers, TODO_before_submission.md, references.bib (25 verified entries).
-- docs/traceability.md covers every figure and every number in the text.
-- NOT done: compiling main.tex (no LaTeX here; user must compile locally or on Overleaf).
+### State of the deliverables
+- Manuscript: paper/main.tex (compiles on MiKTeX; conformed to the journal guide, see
+  docs/journal_guide_check.md), highlights, cover letter, suggested reviewers, graphical
+  abstract (figures/graphical_abstract.pdf|png).
+- Repository: README (install, quick start, reproduction table, requirements), docs/user_guide.md,
+  docs/tutorial.md, docs/model_card.md, results/MANIFEST.md, CITATION.cff, LICENSE (MIT),
+  LICENSE-docs.md (CC BY 4.0), docs/traceability.md.
+- Results: synthetic benchmarks v1 to v3, real-data test (failed, D33/D34), exploratory diagnostics.
 
-### Exact next steps (Phase 6, only after approval)
-1. Apply the user's comments on the manuscript; fix any LaTeX compile errors they report.
-2. README: exact commands for every figure and table; results manifest (file, script, config,
-   seed); model card; CITATION.cff; check LICENSE placeholders.
-3. Clean-clone reproduction: fresh clone -> install -> tests -> make_figures (results-only);
-   document what needs the data download and the lab-PC run (about 12 h).
-4. Tag a release (ask the user for the version name) and add the tag / archive DOI to the
-   code-availability section.
-5. Wider full-text literature check (needs arxiv.org, essopenarchive.org, onepetro.org or PDFs).
+### If work resumes
+1. Author items: verify text and references personally; CRediT roles; Elsevier declarations
+   tool; full-text literature check; decide on journal given the scope risk.
+2. After any manuscript edit: recompile, keep docs/traceability.md in step, re-run
+   `python scripts/make_manifest.py` if result files change.
+3. Optional: Zenodo archive DOI for v1.0.0; add to the code-availability section.
 
 ### Candidate working titles (user to choose)
 1. "What can label-free physics-informed log inversion recover? Identifiability limits and a

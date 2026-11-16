@@ -15,6 +15,8 @@ well by well, global parameter), evaluates it with the same code as the real tes
 ```bash
 python scripts/run_identifiability.py --suite v2 --only v2_base,v2_null_m
 ```
+Note: this replaces the rows of those experiments in the committed result file; run
+`git restore results` afterwards to return to the published results.
 `results/identifiability_v2/runs.csv` then holds, per seed, the correlation between recovered
 and true cementation exponent (`m_r`) and the spread of the recovered map when the truth is
 constant (`m_sd_est` of experiment `v2_null_m`). To test another model, add an entry to
