@@ -1,21 +1,23 @@
 # Progress (resume from here)
 
-## Status: real-data run (D24b) handed to the user's lab PC. Waiting for results branch `results/lab-4060ti-*`.
+## Status: D24b FAILED on real data (D33). STOPPED. Waiting for (1) the results branch, (2) the user's reframing decision. Nothing has been written for the paper.
 
-### Done
-- Benchmarks v1, v2, v3 (docs/identifiability.md); decisions D1 to D32.
-- Frozen: results/splits/frozen_wells_v1.csv (wells, xy, tops, folds, labels),
-  spatial_blocks_v1.csv, dataset_fingerprint_v1.json. Never regenerate.
-- Real pipeline: scripts/train_real.py, eval_real.py, run_real_all.py, check_env.py,
-  run_lab.bat; configs/smoke.yaml, scale_up.yaml. Runbook: docs/lab_gpu_workflow.md.
-- No real-data fit has been run in the cloud session.
+### What happened
+- Lab-PC run finished (about 20 h wall clock incl. restart; fingerprint matched; GPU used).
+- Neither neural-field entry beats the best baseline; both are significantly worse (see D33).
+- Also visible: the spatial field is worse than the same inversion well by well (0.643 vs 0.726)
+  and than fixed-parameter Archie (0.686). Label-free inversions all trail the supervised models.
 
 ### Exact next steps
-1. When the results branch arrives: read results/real/evaluation.json. Check
-   `fingerprint_matches_reference` and `device` in results/real/pay_*.json.
-2. If `D24b_any_entry_beats_best_baseline` is false: STOP, report to the user, write nothing.
-3. Otherwise / after the user's framing decision: sensitivity runs (n 1.6 to 2.2, neutron
-   matrix, environmental offsets), School Trust 4-4 case study, pay maps, Gate 3.
+1. When branch `results/lab-4060ti-*` is pushed: `git fetch origin <branch>`; verify D33 numbers
+   against results/real/evaluation.json (AUC, ci95, paired differences, recon table); check
+   `device` and `fingerprint_matches_reference` in results/real/pay_*.json; merge the results
+   files into main; correct D33 if any number differs.
+2. Do NOT tune or re-run anything on real logs.
+3. After the user's decision (expected: identifiability and negative-results paper):
+   diagnostics that do not change the registered test (why the field hurts: compare per-fold
+   AUC, ensemble spread, blind curve reconstruction), n sensitivity, School Trust 4-4 case
+   study, figures, manuscript. Gate 3 summary first.
 4. Wider full-text literature check (needs arxiv.org, essopenarchive.org, onepetro.org or PDFs).
 
 ### Candidate working titles (user to choose)
