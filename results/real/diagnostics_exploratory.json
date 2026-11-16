@@ -1,0 +1,226 @@
+{
+ "script": "scripts/diagnose_real.py",
+ "seed": null,
+ "status": "EXPLORATORY, post hoc",
+ "labelled_wells_without_a_score": {
+  "fixed_archie": [
+   "1025714888"
+  ],
+  "fixed_simandoux": [
+   "1025714888"
+  ],
+  "inversion_archie_constant": [
+   "1025714888"
+  ],
+  "archie_field": [
+   "1025714888"
+  ],
+  "inversion_archie_per_well": [
+   "1025714888"
+  ],
+  "dual_field": [
+   "1025714888"
+  ],
+  "inversion_dual_per_well": [
+   "1025714888"
+  ]
+ },
+ "auc_per_fold": {
+  "fixed_archie": {
+   "0": 0.758,
+   "1": 0.67,
+   "2": 0.6,
+   "3": 0.934,
+   "4": 0.466
+  },
+  "fixed_simandoux": {
+   "0": 0.745,
+   "1": 0.655,
+   "2": 0.599,
+   "3": 0.949,
+   "4": 0.496
+  },
+  "supervised_gbm": {
+   "0": 0.795,
+   "1": 0.63,
+   "2": 0.78,
+   "3": 0.703,
+   "4": 0.745
+  },
+  "supervised_mlp": {
+   "0": 0.874,
+   "1": 0.57,
+   "2": 0.86,
+   "3": 0.66,
+   "4": 0.688
+  },
+  "inversion_archie_constant": {
+   "0": 0.753,
+   "1": 0.84,
+   "2": 0.396,
+   "3": 0.761,
+   "4": 0.532
+  },
+  "archie_field": {
+   "0": 0.792,
+   "1": 0.765,
+   "2": 0.409,
+   "3": 0.81,
+   "4": 0.525
+  },
+  "inversion_archie_per_well": {
+   "0": 0.821,
+   "1": 0.75,
+   "2": 0.516,
+   "3": 0.9,
+   "4": 0.56
+  },
+  "dual_field": {
+   "0": 0.768,
+   "1": 0.705,
+   "2": 0.399,
+   "3": 0.666,
+   "4": 0.513
+  },
+  "inversion_dual_per_well": {
+   "0": 0.771,
+   "1": 0.71,
+   "2": 0.499,
+   "3": 0.835,
+   "4": 0.522
+  }
+ },
+ "auc_single_ensemble_member": {
+  "archie_constant": {
+   "min": 0.629,
+   "max": 0.629,
+   "mean": 0.629
+  },
+  "archie_field": {
+   "min": 0.642,
+   "max": 0.645,
+   "mean": 0.644
+  },
+  "archie_per_well": {
+   "min": 0.726,
+   "max": 0.726,
+   "mean": 0.726
+  },
+  "dual_field": {
+   "min": 0.539,
+   "max": 0.619,
+   "mean": 0.569
+  },
+  "dual_per_well": {
+   "min": 0.66,
+   "max": 0.66,
+   "mean": 0.66
+  }
+ },
+ "ensemble_sd_over_mean_median": {
+  "inversion_archie_constant": 0.0,
+  "archie_field": 0.0,
+  "inversion_archie_per_well": 0.0,
+  "dual_field": 0.075,
+  "inversion_dual_per_well": 0.0
+ },
+ "auc_single_descriptive_feature": {
+  "mean_dn_porosity": 0.755,
+  "low_resistivity (-mean log10 Rt)": 0.745,
+  "high_resistivity (+mean log10 Rt)": 0.255,
+  "low_gamma_ray": 0.653
+ },
+ "spearman_with_features_labelled_wells": {
+  "fixed_archie": {
+   "mean_dn_porosity": 0.73,
+   "mean_log10_rt": -0.21,
+   "mean_gr": 0.1
+  },
+  "fixed_simandoux": {
+   "mean_dn_porosity": 0.68,
+   "mean_log10_rt": -0.15,
+   "mean_gr": 0.13
+  },
+  "supervised_gbm": {
+   "mean_dn_porosity": 0.4,
+   "mean_log10_rt": -0.43,
+   "mean_gr": -0.47
+  },
+  "supervised_mlp": {
+   "mean_dn_porosity": 0.43,
+   "mean_log10_rt": -0.53,
+   "mean_gr": -0.56
+  },
+  "inversion_archie_constant": {
+   "mean_dn_porosity": 0.58,
+   "mean_log10_rt": -0.53,
+   "mean_gr": -0.05
+  },
+  "archie_field": {
+   "mean_dn_porosity": 0.63,
+   "mean_log10_rt": -0.55,
+   "mean_gr": -0.07
+  },
+  "inversion_archie_per_well": {
+   "mean_dn_porosity": 0.56,
+   "mean_log10_rt": -0.42,
+   "mean_gr": -0.05
+  },
+  "dual_field": {
+   "mean_dn_porosity": 0.62,
+   "mean_log10_rt": -0.54,
+   "mean_gr": -0.03
+  },
+  "inversion_dual_per_well": {
+   "mean_dn_porosity": 0.49,
+   "mean_log10_rt": -0.28,
+   "mean_gr": 0.12
+  }
+ },
+ "spearman_between_methods": {
+  "archie_field ~ inversion_archie_per_well": 0.73,
+  "archie_field ~ fixed_archie": 0.42,
+  "archie_field ~ supervised_gbm": 0.09,
+  "inversion_archie_per_well ~ fixed_archie": 0.48,
+  "inversion_archie_per_well ~ supervised_gbm": 0.2,
+  "fixed_archie ~ supervised_gbm": 0.29
+ },
+ "median_score_by_label": {
+  "fixed_archie": {
+   "producer": 0.065,
+   "dry": 0.046
+  },
+  "fixed_simandoux": {
+   "producer": 0.0781,
+   "dry": 0.06
+  },
+  "supervised_gbm": {
+   "producer": 0.9875,
+   "dry": 0.5421
+  },
+  "supervised_mlp": {
+   "producer": 1.0,
+   "dry": 0.9858
+  },
+  "inversion_archie_constant": {
+   "producer": 0.1167,
+   "dry": 0.086
+  },
+  "archie_field": {
+   "producer": 0.1192,
+   "dry": 0.0799
+  },
+  "inversion_archie_per_well": {
+   "producer": 0.1479,
+   "dry": 0.0851
+  },
+  "dual_field": {
+   "producer": 0.0724,
+   "dry": 0.059
+  },
+  "inversion_dual_per_well": {
+   "producer": 0.0825,
+   "dry": 0.0637
+  }
+ }
+}
