@@ -2,6 +2,11 @@
 
 All sources are files committed under `results/`. Figures are drawn by `scripts/make_figures.py`.
 
+Figure style: Okabe-Ito colour-blind-safe colours (blue #0072B2, vermillion #D55E00, bluish green
+#009E73) with marker shape repeating the colour; Arial (Helvetica / Liberation Sans fallback),
+7 to 8.5 pt; widths 90 mm (single column) and 190 mm (double column); vector PDF with embedded
+TrueType fonts plus 600 dpi PNG. Figure titles are left to the captions.
+
 ## Figures
 | Figure | Content | Source file(s) | Produced by |
 |---|---|---|---|
