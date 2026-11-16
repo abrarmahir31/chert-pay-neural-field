@@ -22,3 +22,8 @@ stored in this repository.
 ## Layout
 `src/chertfield/` library, `scripts/` entry points, `configs/` settings, `tests/` unit tests,
 `results/` machine-written tables and JSON, `figures/`, `paper/`, `docs/`.
+
+## Licence
+Code: MIT (`LICENSE`). Manuscript, documentation and figures: CC BY 4.0 (`LICENSE-docs.md`).
+Third-party data are not relicensed: KGS data remain under the KGS terms of use and must be
+credited as described in `data/README.md` and `LICENSE-docs.md`.
