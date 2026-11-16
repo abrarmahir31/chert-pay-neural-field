@@ -1,6 +1,7 @@
 # To do before submission (authors)
 
-1. Fill [AUTHOR NAMES], [AFFILIATIONS], CRediT, competing interests, funding.
+1. DONE (16 Nov 2026): author, affiliation, e-mail, ORCID, competing interests, funding.
+   Still to edit: the CRediT roles line (marked AUTHOR CHECK in main.tex).
 2. AUTHOR CHECK comments in `main.tex`: statements on chat geology and the Glick exponents
    come from abstracts and KGS web pages; confirm against the full texts.
 3. Full-text reading of the closest papers and a wider search (arXiv, ESS Open Archive,
@@ -15,3 +16,6 @@
 7. Confirm the journal quartile and the current guide for authors (highlights length, abstract
    length, code-availability section format).
 8. Add release tag and archive DOI to the code-availability section (Phase 6).
+9. Guide for authors: could not be fetched automatically (ScienceDirect blocks automated access).
+   Provide the page as PDF or text so the manuscript can be checked against it line by line.
+   Known from search snippets: code must be public at submission.
