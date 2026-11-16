@@ -29,7 +29,8 @@ plt.rcParams.update({
     # metric-compatible fallback on Linux, DejaVu Sans the last resort.
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "Helvetica", "Liberation Sans", "DejaVu Sans"],
-    "mathtext.fontset": "custom", "mathtext.rm": "sans", "font.size": 8, "axes.titlesize": 8.5, "axes.labelsize": 8,
+    "mathtext.fontset": "custom", "mathtext.rm": "sans", "font.size": 8,
+    "axes.titlesize": 8.5, "axes.labelsize": 8,
     "xtick.labelsize": 7.5, "ytick.labelsize": 7.5, "legend.fontsize": 7.5,
     "axes.spines.top": False, "axes.spines.right": False, "axes.edgecolor": MUTED,
     "axes.linewidth": 0.6, "xtick.color": MUTED, "ytick.color": MUTED, "axes.labelcolor": INK,
