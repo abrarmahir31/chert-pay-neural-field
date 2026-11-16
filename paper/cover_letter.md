@@ -35,5 +35,5 @@ the author takes full responsibility for the content.
 
 Sincerely,
 Abrar Mahir
-Department of Petroleum and Mining Engineering, Shahjalal University of Science and Technology, Sylhet, Bangladesh
+Department of Petroleum and Mining Engineering, Shahjalal University of Science and Technology, Kumargaon, Sylhet 3114, Bangladesh
 abrar31@student.sust.edu | ORCID 0009-0003-0658-0667

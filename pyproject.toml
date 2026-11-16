@@ -4,8 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chertfield"
-version = "0.1.0"
-description = "Spatial physics-informed neural field for label-free petrophysical inversion of low-resistivity chert pay"
+version = "1.0.0"
+description = "Identifiability tests of label-free physics-informed petrophysical inversion (Mississippian chat, Kansas)"
+license = {text = "MIT"}
+authors = [{name = "Abrar Mahir"}]
+readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
   "numpy==2.5.3",

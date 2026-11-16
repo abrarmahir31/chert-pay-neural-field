@@ -230,7 +230,53 @@ def fig5_exploratory():
     save(fig, "fig5_exploratory")
 
 
+def graphical_abstract():
+    """Graphical abstract: landscape, 13 cm wide (journal asks for >= 1328 px, readable at 13 cm)."""
+    v1 = pd.read_csv(R / "identifiability/runs.csv")
+    v2 = pd.read_csv(R / "identifiability_v2/runs.csv")
+    e = json.load(open(R / "real/evaluation.json"))
+    fig, (a, b) = plt.subplots(1, 2, figsize=(5.12, 2.5), gridspec_kw={"width_ratios": [1, 1.15]})
+    rows = [("exponent m, same model family", v2[v2.experiment == "v2_same_family"].m_r, BLUE, "o"),
+            ("exponent m, different family", v2[v2.experiment == "v2_base"].m_r, ORANGE, "D"),
+            ("exponent n", v1[v1.experiment == "base"].n_r, ORANGE, "D")]
+    for i, (_, vals, c, mk) in enumerate(rows):
+        strip(a, len(rows) - 1 - i, vals, c, mk)
+    a.axvline(0.70, color=INK, lw=0.8)
+    a.set_yticks(range(len(rows)))
+    a.set_yticklabels([r[0] for r in rows][::-1])
+    a.set_xlim(-0.05, 1.0)
+    a.set_ylim(-0.6, len(rows) - 0.4)
+    a.set_xlabel("Correlation with the true parameter")
+    a.set_title("Synthetic: is the parameter recovered?")
+    a.grid(axis="y", visible=False)
+    key = ["dual_field", "archie_field", "fixed_archie", "inversion_archie_per_well", "supervised_gbm"]
+    short = {"dual_field": "Dual-porosity neural field", "archie_field": "Archie neural field",
+             "fixed_archie": "Fixed-parameter Archie", "inversion_archie_per_well": "Inversion, well by well",
+             "supervised_gbm": "Supervised baseline"}
+    for i, m in enumerate(key):
+        v, (_, c, mk) = e["auc"][m], NAMES[m]
+        b.plot(v["ci95"], [i, i], color=c, lw=2, solid_capstyle="round", zorder=2)
+        b.scatter([v["auc"]], [i], color=c, marker=mk, **DOT)
+        b.text(v["ci95"][1] + 0.01, i, f"{v['auc']:.2f}", va="center", fontsize=7)
+    b.axvline(0.5, color=INK, lw=0.8)
+    b.set_yticks(range(len(key)))
+    b.set_yticklabels([short[m] for m in key])
+    b.set_xlim(0.45, 0.93)
+    b.set_ylim(-0.6, len(key) - 0.4)
+    b.set_xlabel("AUC, producers vs dry holes (held-out blocks)")
+    b.set_title("625 real wells: pre-registered test")
+    b.grid(axis="y", visible=False)
+    fig.suptitle("Label-free physics-informed log inversion: recovery vanishes under model mismatch",
+                 fontsize=8.5, x=0.5, y=1.02)
+    fig.tight_layout()
+    F.mkdir(exist_ok=True)
+    fig.savefig(F / "graphical_abstract.pdf")
+    fig.savefig(F / "graphical_abstract.png", dpi=400)
+    plt.close(fig)
+
+
 if __name__ == "__main__":
-    for f in (fig1_map, fig2_identifiability, fig3_synthetic_pay, fig4_real_auc, fig5_exploratory):
+    for f in (fig1_map, fig2_identifiability, fig3_synthetic_pay, fig4_real_auc, fig5_exploratory,
+              graphical_abstract):
         f()
     print("figures written to", F)

@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite it as below."
+title: "chert-pay-neural-field: identifiability tests of label-free physics-informed petrophysical inversion"
+type: software
+version: 1.0.0
+date-released: 2026-11-16
+license: MIT
+repository-code: "https://github.com/abrarmahir31/chert-pay-neural-field"
+authors:
+  - family-names: Mahir
+    given-names: Abrar
+    orcid: "https://orcid.org/0009-0003-0658-0667"
+    affiliation: "Department of Petroleum and Mining Engineering, Shahjalal University of Science and Technology, Sylhet, Bangladesh"
+keywords:
+  - physics-informed neural networks
+  - identifiability
+  - well logs
+  - low-resistivity pay
+  - negative results
