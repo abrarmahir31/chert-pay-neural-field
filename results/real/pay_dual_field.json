@@ -1,0 +1,82 @@
+{
+ "script": "scripts/train_real.py",
+ "config": "scale_up.yaml",
+ "entry": "dual",
+ "spatial": "field",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9
+ ],
+ "standin": false,
+ "n_wells": 625,
+ "seconds": 12172,
+ "device": "cuda:0",
+ "torch": "2.15.0+cu132",
+ "fingerprint": {
+  "n_wells": 625,
+  "curves": {
+   "RHOB": {
+    "n_valid": 123804,
+    "sum": 304604.4
+   },
+   "NPHI": {
+    "n_valid": 123574,
+    "sum": 19102.7
+   },
+   "GR": {
+    "n_valid": 123629,
+    "sum": 5041922.5
+   },
+   "LRT": {
+    "n_valid": 123615,
+    "sum": 103986.6
+   },
+   "LRXO": {
+    "n_valid": 117933,
+    "sum": 125033.6
+   },
+   "DT": {
+    "n_valid": 23803,
+    "sum": 1658244.9
+   },
+   "PE": {
+    "n_valid": 51078,
+    "sum": 144067.5
+   }
+  }
+ },
+ "fingerprint_matches_reference": true,
+ "settings": {
+  "seeds": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "steps_train": 10000,
+  "steps_test": 5000,
+  "n_fixed": 1.8,
+  "rw_nominal": 0.05,
+  "rw_prior_log_sd": 0.5,
+  "hide": [
+   "LRXO",
+   "PE",
+   "DT"
+  ],
+  "bootstrap": 2000
+ }
+}

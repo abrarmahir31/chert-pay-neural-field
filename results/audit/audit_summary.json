@@ -28,7 +28,7 @@
   "idw_interp": 150
  },
  "miss_control_wells_all_barber": 4948,
- "idw_loo_mae_ft": 21.35487001027946,
+ "idw_loo_mae_ft": 21.365224316123403,
  "idw_loo_p90_abs_ft": 35.61545639799829,
  "miss_thickness_ft_quantiles": {
   "0.1": 57.0,
@@ -87,11 +87,11 @@
  },
  "usable_status_counts": {
   "O&G": 258,
-  "OIL": 147,
+  "OIL": 146,
   "O&G-P&A": 52,
   "D&A": 47,
   "GAS": 41,
-  "OIL-P&A": 37,
+  "OIL-P&A": 38,
   "SWD": 25,
   "GAS-P&A": 14,
   "SWD-P&A": 3,
