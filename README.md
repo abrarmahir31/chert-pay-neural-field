@@ -1,5 +1,7 @@
 # chert-pay-neural-field
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24433837.svg)](https://doi.org/10.5281/zenodo.24433837)
+
 Code, decision log and results for the paper
 
 > **Identifiability before interpretation: an inverse-crime test of physics-informed
@@ -89,6 +91,6 @@ Third-party data are not relicensed; files under `results/` that carry KGS-deriv
 must be reused with the KGS credit line.
 
 ## Citation and AI-use note
-See `CITATION.cff`. The code, analysis and text were produced with extensive assistance from an
+See `CITATION.cff`. Archived release v1.0.0: https://doi.org/10.5281/zenodo.24433837. The code, analysis and text were produced with extensive assistance from an
 AI system under the author's direction; the declaration is in the manuscript and the
 full decision record is in `DECISIONS.md`.

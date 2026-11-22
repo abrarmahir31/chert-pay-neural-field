@@ -19,6 +19,6 @@
 9. Guide for authors: could not be fetched automatically (ScienceDirect blocks automated access).
    Provide the page as PDF or text so the manuscript can be checked against it line by line.
    Known from search snippets: code must be public at submission.
-10. Create the release on GitHub: Releases > Draft a new release > tag `v1.0.0`, target `main`.
+10. DONE (22 Nov 2026): release v1.0.0 published, Zenodo DOI 10.5281/zenodo.24433837 added to the manuscript. Was: create the release on GitHub: Releases > Draft a new release > tag `v1.0.0`, target `main`.
     The manuscript's code-availability section cites this release.
 11. Upload `figures/graphical_abstract.pdf` as the graphical abstract (optional).

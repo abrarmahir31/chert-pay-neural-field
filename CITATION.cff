@@ -5,6 +5,11 @@ type: software
 version: 1.0.0
 date-released: 2026-11-16
 license: MIT
+doi: 10.5281/zenodo.24433837
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.24433837
+    description: "Zenodo archive of release v1.0.0"
 repository-code: "https://github.com/abrarmahir31/chert-pay-neural-field"
 authors:
   - family-names: Mahir
